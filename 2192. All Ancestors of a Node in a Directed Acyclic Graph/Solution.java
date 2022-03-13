@@ -2,20 +2,20 @@ class Solution {
     public List<List<Integer>> getAncestors(int n, int[][] edges) {
         Map<Integer, List<Integer>> graph = new HashMap<>();
         int[] inDegree = new int[n];
-        for (int[] edge : edges) {  
+        for (int[] edge : edges) {
             int u = edge[0];
             int v = edge[1];
             if (!graph.containsKey(u)) {
                 graph.put(u, new LinkedList<>());
             }
             graph.get(u).add(v);
-            inDegree[v]++;  
-        }  
+            inDegree[v]++;
+        }
         List<TreeSet<Integer>> ans = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             ans.add(new TreeSet<>());
         }
-
+        Deque<Integer> q = new LinkedList<>();
         for (int i = 0; i < n; i++) {
             if (inDegree[i] == 0)
                 q.add(i);
@@ -41,4 +41,7 @@ class Solution {
 
         return ansList;
     }
+
 }
+
+    
