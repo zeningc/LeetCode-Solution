@@ -1,0 +1,5 @@
+# 499. The Maze III
+### Dijkstra's Algorithm
+- Different from [505](https://leetcode.com/problems/the-maze-ii/), this problem allows the ball to fall into holes even though the ball is not stopped. So we need to consider each position instead of only the positions that hit the wall.  
+- It also requires the lexicographically minimum answer, which means that we need to sort the path alphabet within the priority queue.  
+- Note that every node can be accessed more than once. Imagine the hole(x, y-1) is on the left of a pos(x, y), and the shortest path to pos is z, but when we reach pos, we are actually going upward. To reach the hole, we need to go further upward, hit a wall, go right, hit the wall, go down, hit the wall and go left to get to pos, then we keep the direction to go left to reach hole. If the first time we get to pos and set vis[x][y] to true, then we cannot reach hole by going left from pos anymore. So we need to add direction status to vis array to gurantee that we can get the answer. 
