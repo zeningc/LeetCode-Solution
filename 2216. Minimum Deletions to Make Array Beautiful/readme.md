@@ -1,0 +1,4 @@
+# 2216. Minimum Deletions to Make Array Beautiful
+Greedy. Why does the greedy solution works? let's consider the following cases:  
+[a b b c c d d e] [f f x x y y]  
+The left part of the array is already beautiful while the right part is not. We must remove the f in the left end of the right part, if we do not remove it, the right part will never be beautified. Why? First of all, we cannot modify the left part since it is already beautiful. Secondly, modifying any character to the right of the two f will never beautify the two f, because it cannot change the index of them. As a result, the f MUST be removed. It may influence the following sequence but in any situation, one f needs to be removed and the influence will happen at that time.  
