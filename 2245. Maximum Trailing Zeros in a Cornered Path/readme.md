@@ -1,0 +1,2 @@
+# 2245. Maximum Trailing Zeros in a Cornered Path
+prefix sum is needed. But simple multipling everything will cause overflow. The number of trailing zeros is actually determine by how many factors of 2 and 5 pair exist. Like 125 * 8 = 1000, 125 = 5 * 5 * 5, 8 = 2 * 2 * 2, thus we have 3 pairs of 2 and 5, and the number of trailing zeros is 3.

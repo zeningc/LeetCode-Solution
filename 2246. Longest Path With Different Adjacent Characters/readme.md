@@ -1,0 +1,2 @@
+# 2246. Longest Path With Different Adjacent Characters
+DFS, at each node, try to construct a path that is formed by two of its children, then return the length of the longest path that starts from itself to the leaf to its parent.  

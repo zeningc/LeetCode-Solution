@@ -1,0 +1,2 @@
+# 2244. Minimum Rounds to Complete All Tasks
+Use dp to calculate how many steps are needed to finish x tasks of the same level, then summarize the frequency of each level of task, and add the steps together. 
