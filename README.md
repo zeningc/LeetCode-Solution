@@ -3,7 +3,7 @@
 My own implementation for leetcode questions in Java.
 
 [My LeetCode Homepage](https://leetcode.com/zeningc/)  
-[My Linkedin Progile](https://www.linkedin.com/in/zening99/)(currently seeking for full-time SDE opportunities in US, any help would be appreciated)
+[My Linkedin Profile](https://www.linkedin.com/in/zening99/)(currently seeking for full-time SDE opportunities in US, any help would be appreciated)
 
 ## Question Source:
 - LeetCode Weekly Contest
