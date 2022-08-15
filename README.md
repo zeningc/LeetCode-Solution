@@ -76,12 +76,32 @@ My own implementation for leetcode questions in Java.
 - 691 Stickers to Spell Word
 - 1125 Smallest Sufficient Team
 - 1349 Maximum Students Taking Exam
+    ##### Digit DP
+    - 2376 Count Special Integers
+    - 233 Number of Digit One
+    - 600 Non-negative Integers without Consecutive Ones
+    - 902 Numbers At Most N Given Digit Set
+    - 1067 Digit Count in Range
+
 
 ### Differential Array
 - 370 Range Addition
 
 ### HashMap
 - 974 Subarray Sums Divisible by K
+- 2374 Node With Highest Edge Score
+
+### Matrix
+- 2373 Largest Local Values in a Matrix
+
+### DFS
+- 2375 Construct Smallest Number From DI String
+- 2376 Count Special Integers
+
+### Stack
+- 2375 Construct Smallest Number From DI String
+
+
 
 ## Question Source:
 - LeetCode Weekly Contest
