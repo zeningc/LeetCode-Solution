@@ -82,6 +82,10 @@ My own implementation for leetcode questions in Java.
     - 600 Non-negative Integers without Consecutive Ones
     - 902 Numbers At Most N Given Digit Set
     - 1067 Digit Count in Range
+    - 357 Count Numbers with Unique Digits
+    - 1012 Numbers With Repeated Digits
+
+
 
 
 ### Differential Array
