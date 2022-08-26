@@ -105,6 +105,10 @@ My own implementation for leetcode questions in Java.
 ### Stack
 - 2375 Construct Smallest Number From DI String
 
+### Design
+- 380 Insert Delete GetRandom O(1)
+- 1656 Design an Ordered Stream
+- 1396 Design Underground System
 
 
 ## Question Source:
