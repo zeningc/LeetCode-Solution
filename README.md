@@ -104,6 +104,7 @@ My own implementation for leetcode questions in Java.
 
 ### Stack
 - 2375 Construct Smallest Number From DI String
+- 484. Find Permutation
 
 ### Design
 - 380 Insert Delete GetRandom O(1)
