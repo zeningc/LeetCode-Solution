@@ -17,22 +17,36 @@ class Solution {
     public Node copyRandomList(Node head) {
         if (head == null)
             return null;
-        Map<Node, Node> copyMap = new HashMap<>();
-        Node root = head;
-        while (root != null)    {
-            copyMap.put(root, new Node(root.val));
-            root = root.next;
+        Node node = head;
+        
+        while (node != null)    {
+            Node newNode = new Node(node.val);
+            Node next = node.next;
+            node.next = newNode;
+            newNode.next = next;
+            node = next;
         }
         
-        root = head;
-        while (root != null)    {
-            if (root.next != null)
-                copyMap.get(root).next = copyMap.get(root.next);
-            if (root.random != null)
-                copyMap.get(root).random = copyMap.get(root.random);
-            root = root.next;
+        node = head;
+        Node newHead = head.next;
+        while (node != null)    {
+            if (node.random != null)
+                node.next.random = node.random.next;
+            node = node.next.next;
         }
         
-        return copyMap.get(head);
+        node = head;
+        
+        while (node != null)    {
+            Node next = node.next.next;
+            if (next != null)
+                node.next.next = next.next;
+            else
+                node.next.next = null;
+            node.next = next;
+            node = next;
+        }
+        
+        return newHead;
     }
 }
