@@ -25,7 +25,7 @@ class Solution {
         int[] left = dfs(root.left);
         int[] right = dfs(root.right);
         
-        if (left[0] != Integer.MIN_VALUE && right[0] != Integer.MIN_VALUE && root.val > left[1] && root.val < right[0])
+        if (root.val > left[1] && root.val < right[0])
             return new int[] {Math.min(left[0], root.val), Math.max(right[1], root.val), left[2] + right[2] + 1};
         return new int[] {Integer.MIN_VALUE, Integer.MAX_VALUE, Math.max(left[2], right[2])};
     }
