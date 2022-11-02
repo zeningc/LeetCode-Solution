@@ -18,13 +18,11 @@ class Solution {
         int[][] dp = new int[n + 1][k + 1];
         for (int i = 1; i <= n; i++)
             Arrays.fill(dp[i], Integer.MAX_VALUE / 2);
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= k; j++)    {
-                for (int x = 0; x < i; x++) {
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= k; j++)
+                for (int x = 0; x < i; x++)
                     dp[i][j] = Math.min(dp[i][j], dp[x][j - 1] + range[x + 1][i]);
-                }
-            }
-        }
+
         return dp[n][k];
     }
 }
