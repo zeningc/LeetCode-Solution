@@ -1,76 +1,61 @@
 class Solution {
     int[] count;
     int n;
+    int[] sorted;
+    int[] nums;
+    int[] temp;
     public List<Integer> countSmaller(int[] nums) {
         n = nums.length;
         count = new int[n];
-        List<int[]> numList = new ArrayList<>(n);
-        for (int i = 0; i < n; i++)
-            numList.add(new int[] {nums[i], i});
-        List<int[]> ret = mergeSort(numList, 0, n - 1);
+        this.nums = nums;
+        temp = new int[n];
+        sorted = nums.clone();
+        mergeSort(0, n - 1);
         return Arrays.stream(count).boxed().collect(Collectors.toList());
     }
     
-    List<int[]> mergeSort(List<int[]> numList, int lo, int hi)  {
-        List<int[]> ret = new ArrayList<>(hi - lo + 1);
-        if (lo == hi)   {
-            ret.add(numList.get(lo));
-            return ret;
-        }
-        
-        if (lo + 1 == hi)   {
-            if (numList.get(lo)[0] <= numList.get(hi)[0])    {
-                ret.add(numList.get(hi));
-                ret.add(numList.get(lo));
-            }
-            else    {
-                count[numList.get(lo)[1]]++;
-                ret.add(numList.get(lo));
-                ret.add(numList.get(hi));
-            }
-            return ret;
-        }
-        
+    void mergeSort(int lo, int hi)  {
+        if (lo == hi)
+            return;
         int mid = lo + (hi - lo) / 2;
-        List<int[]> left = mergeSort(numList, lo, mid);
-        List<int[]> right = mergeSort(numList, mid + 1, hi);
+        mergeSort(lo, mid);
+        mergeSort(mid + 1, hi);
         
-        for (int[] item : left) {
-            int num = item[0];
-            int idx = item[1];
-            int a = 0;
-            int b = right.size() - 1;
-            while (a <= b)  {
-                int m = a + (b - a) / 2;
-                if (right.get(m)[0] < num)  {
-                    b = m - 1;
-                }
-                else    {
-                    a = m + 1;
-                }
+        for (int i = lo; i <= mid; i++)  {
+            int val = nums[i];
+            int left = mid + 1;
+            int right = hi;
+            while (left <= right)   {
+                int m = left + (right - left) / 2;
+                if (sorted[m] < val)
+                    right = m - 1;
+                else
+                    left = m + 1;
             }
-            count[idx] += right.size() - a;
+            count[i] += hi - left + 1;
         }
-        
-        int p = 0;
-        int q = 0;
-        while (p < left.size() && q < right.size()) {
-            if (left.get(p)[0] < right.get(q)[0])   {
-                ret.add(right.get(q++));
+        int idx = lo;
+        int p = lo;
+        int q = mid + 1;
+        while (p <= mid && q <= hi) {
+            if (sorted[p] < sorted[q])  {
+                temp[idx++] = sorted[q++];
             }
             else    {
-                ret.add(left.get(p++));
+                temp[idx++] = sorted[p++];
             }
         }
         
-        while (p < left.size()) {
-            ret.add(left.get(p++));
+        while (p <= mid)  {
+            temp[idx++] = sorted[p++];
         }
         
-        while (q < right.size()) {
-            ret.add(right.get(q++));
+        while (q <= hi)  {
+            temp[idx++] = sorted[q++];
         }
         
-        return ret;
+        for (int i = lo; i <= hi; i++)  {
+            sorted[i] = temp[i];
+        }
     }
 }
