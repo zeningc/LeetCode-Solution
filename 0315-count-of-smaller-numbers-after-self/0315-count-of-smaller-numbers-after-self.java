@@ -28,7 +28,6 @@ class Solution {
                 ret.add(numList.get(lo));
                 ret.add(numList.get(hi));
             }
-            flush(numList, ret, lo);
             return ret;
         }
         
@@ -72,13 +71,6 @@ class Solution {
             ret.add(right.get(q++));
         }
         
-        flush(numList, ret, lo);
-        
         return ret;
-    }
-    void flush(List<int[]> numList, List<int[]> ret, int lo)    {
-        for (int i = 0; i < ret.size(); i++)    {
-            numList.set(i + lo, ret.get(i));
-        }
     }
 }
