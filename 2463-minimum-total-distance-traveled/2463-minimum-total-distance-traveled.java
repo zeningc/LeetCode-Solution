@@ -17,12 +17,13 @@ class Solution {
         }
         
         long[][] dp = new long[m + 1][n + 1];
-        Arrays.fill(dp[0], Long.MAX_VALUE / 2);
-        dp[0][0] = 0;
+        for (int i = 0; i <= m; i++)
+            Arrays.fill(dp[i], Long.MAX_VALUE / 2);
+        for (int i = 0; i <= m; i++)
+            dp[i][0] = 0;
         
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
-                dp[i][j] = dp[i - 1][j];
                 for (int k = 0; k <= Math.min(j, factory[i - 1][1]); k++)   {
                     dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - k] + dist[i - 1][j - k][j - 1]);
                 }
