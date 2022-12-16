@@ -2,7 +2,6 @@ class Solution {
     public int maxJump(int[] stones) {
         int ans = 0;
         int i = 0;
-        int j = 0;
         int n = stones.length;
         while (i != n - 1)  {
             if (i + 2 <= n - 1) {
