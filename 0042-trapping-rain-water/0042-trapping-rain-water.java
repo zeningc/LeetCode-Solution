@@ -1,15 +1,25 @@
 class Solution {
     public int trap(int[] height) {
+        int hi = height.length - 1;
+        int lo = 0;
+        int loMax = 0;
+        int hiMax = 0;
         int ans = 0;
-        Deque<Integer> stack = new LinkedList<>();
-        for (int i = 0; i < height.length; i++) {
-            while (!stack.isEmpty() && height[stack.peek()] < height[i])    {
-                int pop = stack.pop();
-                if (!stack.isEmpty())   {
-                    ans += (i - stack.peek() - 1) * (Math.min(height[i], height[stack.peek()]) - height[pop]);
-                }
+        while (lo < hi) {
+            if (height[lo] < height[hi])    {
+                if (height[lo] > loMax)
+                    loMax = height[lo];
+                else
+                    ans += loMax - height[lo];
+                lo++;
             }
-            stack.push(i);
+            else    {
+                if (height[hi] > hiMax)
+                    hiMax = height[hi];
+                else
+                    ans += hiMax - height[hi];
+                hi--;
+            }
         }
         
         return ans;
