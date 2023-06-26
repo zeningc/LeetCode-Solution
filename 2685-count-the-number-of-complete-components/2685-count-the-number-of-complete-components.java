@@ -13,10 +13,11 @@ class Solution {
         }
         int ans = 0;
         boolean[] vis = new boolean[n];
+        Deque<Integer> q;
         for (int i = 0; i < n; i++) {
             if (vis[i])
                 continue;
-            Deque<Integer> q = new LinkedList<>();
+            q = new ArrayDeque<>(n);
             q.offer(i);
             int visCnt = 0;
             int edgeCnt = 0;
