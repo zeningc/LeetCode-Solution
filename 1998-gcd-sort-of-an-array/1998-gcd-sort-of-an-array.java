@@ -2,16 +2,19 @@ class Solution {
     public boolean gcdSort(int[] nums) {
         int maxVal = Arrays.stream(nums).boxed().max(Integer::compare).get();
         UnionFind uf = new UnionFind(maxVal);
-        Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
-        for (int factor = 2; factor <= maxVal; factor++)  {
-            int prev = -1;
-            for (int j = 1; j * factor <= maxVal; j++)   {
-                int cur = j * factor;
-                if (set.contains(prev) && set.contains(cur))
-                    uf.union(prev, cur);
-                if (set.contains(cur))
-                    prev = cur;
+        
+        for (int num : nums)    {
+            int t = num;
+            for (int f = 2; f <= (int)Math.sqrt(num); f++)  {
+                if (t % f != 0)
+                    continue;
+                uf.union(num, f);
+                while (t % f == 0)    {
+                    t /= f;
+                }
             }
+            if (t > 1)
+                uf.union(t, num);
         }
         
         int[] copy = nums.clone();
@@ -29,10 +32,10 @@ class UnionFind {
     int[] parents;
     int[] size;
     
-    public UnionFind(int maxVal)    {
-        parents = new int[maxVal + 1];
-        size = new int[maxVal + 1];
-        for (int i = 0; i <= maxVal; i++) {
+    public UnionFind(int n)    {
+        parents = new int[n + 1];
+        size = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
             parents[i] = i;
             size[i] = 1;
         }
