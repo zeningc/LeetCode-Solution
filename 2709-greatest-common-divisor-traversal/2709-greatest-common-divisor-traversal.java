@@ -1,15 +1,10 @@
 class Solution {
     public boolean canTraverseAllPairs(int[] nums) {
         int n = nums.length;
-        int maxVal = 0;
-        for (int i = 0; i < n; i++)
-            maxVal = Math.max(maxVal, nums[i]);
+        int maxVal = Arrays.stream(nums).boxed().max(Integer::compare).get();
         
         UnionFind uf = new UnionFind(maxVal);
-        boolean[] vis = new boolean[maxVal+1];
         for (int i = 0; i < n; i++) {
-            if (vis[nums[i]])
-                continue;
             int num = nums[i];
             if (num == 1)
                 return n == 1;
@@ -23,7 +18,6 @@ class Solution {
             }
             if (num > 1)
                 uf.union(num, nums[i]);
-            vis[nums[i]] = true;
         }
         for (int i = 1; i < n; i++) {
             if (!uf.connected(nums[i - 1], nums[i]))
