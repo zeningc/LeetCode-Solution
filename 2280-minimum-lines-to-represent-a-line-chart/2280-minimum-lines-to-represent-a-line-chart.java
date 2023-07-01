@@ -1,8 +1,10 @@
 class Solution {
     public int minimumLines(int[][] stockPrices) {
-        Arrays.sort(stockPrices, (a, b) -> a[0] - b[0]);
         int n = stockPrices.length;
-        int ans = 0;
+        if (n < 2)
+            return 0;
+        Arrays.sort(stockPrices, (a, b) -> a[0] - b[0]);
+        int ans = 1;
         int startX = stockPrices[0][0];
         int startY = stockPrices[0][1];
         int prevX = stockPrices[0][0];
@@ -11,7 +13,6 @@ class Solution {
             int x = stockPrices[i][0];
             int y = stockPrices[i][1];
             if (prevX == startX && prevY == startY)    {
-                ans++;
                 prevX = x;
                 prevY = y;
                 continue;
