@@ -19,12 +19,6 @@ class Solution {
             long operationCnt = 0;
             for (int num : nums)
                 operationCnt += Math.abs(num - mid);
-            if (nums.size() % 2 == 0)   {
-                long t = 0;
-                for (int num : nums)
-                    t += Math.abs(num - nums.get(nums.size() / 2 - 1));
-                operationCnt = Math.min(operationCnt, t);
-            }
             ans += operationCnt;
         }
         
