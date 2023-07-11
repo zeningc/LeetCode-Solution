@@ -1,5 +1,4 @@
 class Solution {
-    int d;
     public int digitsCount(int d, int low, int high) {
         return dfs(new Integer[getLen(high)][10], getDigits(high), getLen(high), d, 0, 0, false, true) - dfs(new Integer[getLen(low - 1)][10], getDigits(low - 1), getLen(low - 1), d, 0, 0, false, true);
     }
