@@ -1,8 +1,7 @@
 class Solution {
     public int longestValidSubstring(String word, List<String> forbidden) {
         Trie root = new Trie('#', false);
-        Set<String> set = new HashSet<>(forbidden);
-        for (String s : set)
+        for (String s : forbidden)
             Trie.insert(root, s);
         int n = word.length();
         int last = n;
