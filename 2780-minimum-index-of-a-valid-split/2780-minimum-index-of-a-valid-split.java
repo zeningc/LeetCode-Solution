@@ -15,14 +15,10 @@ class Solution {
                 break;
             }
         }
-        
-        int[] presum = new int[n + 1];
-        for (int i = 1; i <= n; i++)
-            presum[i] = presum[i - 1] + (nums.get(i - 1) == dominant ? 1 : 0);
         int ans = -1;
-        
+        int leftCnt = 0;
         for (int i = 0; i < n - 1; i++) {
-            int leftCnt = presum[i + 1];
+            leftCnt = leftCnt + (nums.get(i) == dominant ? 1 : 0);
             int rightCnt = maxFreq - leftCnt;
             int leftLen = i + 1;
             int rightLen = n - i - 1;
