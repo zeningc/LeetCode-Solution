@@ -28,7 +28,6 @@ class Solution {
                 bitMaskCounterMap.put(mask, 0);
             cnt += bitMaskCounterMap.get(mask);
             for (int i = 0; i < 26; i++)    {
-                // System.out.println((mask ^ (1 << i)));
                 cnt += bitMaskCounterMap.getOrDefault((mask ^ (1 << i)), 0);
             }
             bitMaskCounterMap.put(mask, bitMaskCounterMap.get(mask) + 1);
