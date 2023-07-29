@@ -1,26 +1,24 @@
 class Solution {
-    /*
-    dp[i]: the number of distinct subsequence with (char)(i + 'a') as the last character
-    at the current point s[i], we can attach s[i] to the end of every subsequence, and form a new sequence
-    plus we can have '' + s[i]
-    which makes dp[s[i] - 'a'] = sum(dp) + 1
-    */
     public int distinctSubseqII(String s) {
         int n = s.length();
-        int[] dp = new int[26];
         int mod = (int)1e9 + 7;
-        for (char c : s.toCharArray())  {
-            int sum = 0;
-            for (int i = 0; i < 26; i++)    {
-                sum = (sum + dp[i]) % mod;
-            }
-            dp[c - 'a'] = (sum + 1) % mod;
+        int[] last = new int[26];
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++)    {
+            char c = s.charAt(i - 1);
+            dp[i] = (dp[i - 1] * 2) % mod;
+            if (last[c - 'a'] >= 1)
+                dp[i] = (dp[i] - dp[last[c - 'a'] - 1] + mod) % mod;
+            last[c - 'a'] = i;
         }
-        
-        int ret = 0;
-        for (int i = 0; i < 26; i++)
-            ret = (ret + dp[i]) % mod;
-        
-        return ret;
+        return (dp[n] - 1 + mod) % mod;
     }
 }
+
+/*
+lee
+[] l e le
+e  le  ee  lee
+[] l   e   
+*/
