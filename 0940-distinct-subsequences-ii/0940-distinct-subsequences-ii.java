@@ -1,4 +1,10 @@
 class Solution {
+    /*
+    dp[i]: the number of distinct subsequence with (char)(i + 'a') as the last character
+    at the current point s[i], we can attach s[i] to the end of every subsequence, and form a new sequence
+    plus we can have '' + s[i]
+    which makes dp[s[i] - 'a'] = sum(dp) + 1
+    */
     public int distinctSubseqII(String s) {
         int n = s.length();
         int[] dp = new int[26];
