@@ -1,4 +1,10 @@
 class Solution {
+    /*
+    the reason why this is quiet tricky than 940 is that it does not allow us to construct any subsequence from '' at all,
+    except the first '1'
+    so whether considering empty string or not will not help with this question if we start from stratch
+    the only way to implement this is to start from '1' and do not consider empty string
+    */
     public int numberOfUniqueGoodSubsequences(String binary) {
         int i = 0;
         int n = binary.length();
