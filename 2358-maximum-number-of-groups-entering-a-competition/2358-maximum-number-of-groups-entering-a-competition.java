@@ -1,22 +1,15 @@
 class Solution {
     public int maximumGroups(int[] grades) {
-        Arrays.sort(grades);
-        int cnt = 0;
-        int preSum = -1;
-        int sum = 0;
-        int preLen = 0;
-        int len = 0;
-        for (int i = 0; i < grades.length; i++) {
-            sum += grades[i];
-            len++;
-            if (sum > preSum && len > preLen)   {
-                cnt++;
-                preSum = sum;
-                preLen = len;
-                sum = 0;
-                len = 0;
-            }
+        int ans = 1;
+        for (int i = 2; i <= Math.sqrt(grades.length * 2); i++)  {
+            if (i * (i + 1) / 2 <= grades.length)
+                ans = i;
+            else
+                break;
         }
-        return cnt;
+        return ans;
     }
 }
+
+// n  * (n + 1) / 2 <= grades.length
+// (n + 1) ^ 2 <= m * 2
