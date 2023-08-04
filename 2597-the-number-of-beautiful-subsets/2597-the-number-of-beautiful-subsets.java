@@ -1,21 +1,36 @@
 class Solution {
     public int beautifulSubsets(int[] nums, int k) {
-        return dfs(nums, new HashMap<>(), k, 0);
-    }
-    
-    int dfs(int[] nums, Map<Integer, Integer> freq, int k, int idx) {
-        if (idx >= nums.length)
-            return !freq.isEmpty() ? 1 : 0;
-        int ans = 0;
-        ans += dfs(nums, freq, k, idx + 1);
-        int curNum = nums[idx];
-        if (freq.containsKey(curNum + k) || freq.containsKey(curNum - k))
-            return ans;
-        freq.put(curNum, freq.getOrDefault(curNum, 0) + 1);
-        ans += dfs(nums, freq, k, idx + 1);
-        freq.put(curNum, freq.get(curNum) - 1);
-        if (freq.get(curNum) == 0)
-            freq.remove(curNum);
-        return ans;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums)
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        Map<Integer, List<int[]>> modMap = new HashMap<>();
+        for (Map.Entry<Integer, Integer> e : freq.entrySet())   {
+            if (!modMap.containsKey(e.getKey() % k))
+                modMap.put(e.getKey() % k, new ArrayList<>());
+            modMap.get(e.getKey() % k).add(new int[] {e.getKey(), e.getValue()});
+        }
+        int ret = 1;
+        
+        for (Map.Entry<Integer, List<int[]>> e : modMap.entrySet()) {
+            List<int[]> list = e.getValue();
+            Collections.sort(list, (a, b) -> a[0] - b[0]);
+            int take = 0;
+            int notTake = 1;
+            for (int i = 0; i < list.size(); i++)   {
+                int takeCopy = take;
+                int notTakeCopy = notTake;
+                if (i > 0 && list.get(i)[0] == list.get(i - 1)[0] + k)    {
+                    take = notTakeCopy * (int)(Math.pow(2, list.get(i)[1]) - 1);
+                    
+                }
+                else    {
+                    take = (takeCopy + notTakeCopy) * (int)(Math.pow(2, list.get(i)[1]) - 1);
+                }
+                notTake = (takeCopy + notTakeCopy);
+            }
+            ret *= (take + notTake);
+        }
+        
+        return ret - 1;
     }
 }
