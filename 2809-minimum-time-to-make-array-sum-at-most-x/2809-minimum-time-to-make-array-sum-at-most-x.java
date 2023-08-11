@@ -9,9 +9,6 @@ class Solution {
         Arrays.sort(idx, (a, b) -> nums2.get(a) - nums2.get(b));
         for (int i = 1; i <= n; i++)
             presum[i] = presum[i - 1] + nums2.get(idx[i - 1]);
-        int sum = 0;
-        for (int num : nums1)
-            sum += num;
         dp[0] = 0;
         
         for (int i = 1; i <= n; i++)    {
