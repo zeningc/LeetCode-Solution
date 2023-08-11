@@ -1,7 +1,7 @@
 class Solution {
     public int minimumTime(List<Integer> nums1, List<Integer> nums2, int x) {
         int n = nums1.size();
-        int[][] dp = new int[n + 1][n + 1];
+        int[] dp = new int[n + 1];
         int[] presum = new int[n + 1];
         Integer[] idx = new Integer[n];
         for (int i = 0; i < n; i++)
@@ -12,20 +12,21 @@ class Solution {
         int sum = 0;
         for (int num : nums1)
             sum += num;
-        dp[0][0] = 0;
+        dp[0] = 0;
         
         for (int i = 1; i <= n; i++)    {
             int k = idx[i - 1];
-            for (int j = 0; j <= n; j++)    {
-                dp[i][j] = Integer.MAX_VALUE / 2;
-                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j] + nums1.get(k) + j * nums2.get(k));
+            for (int j = n; j >= 0; j--)    {
+                int nextVal = Integer.MAX_VALUE / 2;
+                nextVal = Math.min(nextVal, dp[j] + nums1.get(k) + j * nums2.get(k));
                 if (j >= 1)
-                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1] + presum[i - 1]);
+                    nextVal = Math.min(nextVal, dp[j - 1] + presum[i - 1]);
+                dp[j] = nextVal;
             }
         }
         
         for(int i = 0; i <= n; i++)
-            if (dp[n][i] <= x)
+            if (dp[i] <= x)
                 return i;
         
         return -1;
