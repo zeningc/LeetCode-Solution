@@ -8,7 +8,6 @@ class Solution {
         int totalSum = 0;
         for (int i = 0; i < n; i++)
             totalSum += nums[i];
-        List<Integer> targetSumList = new ArrayList<>((int)Math.sqrt(totalSum));
         for (int[] edge : edges)    {
             int u = edge[0];
             int v = edge[1];
