@@ -32,14 +32,12 @@ public:
         {
             vector<int>in = indegree;
             queue<int>q;
-            vector<int>visited(n,0);
             vector<int>sum = nums;
                         
             for (int i=0; i<n; i++)
                 if (in[i]==1)
                 {
                     q.push(i);
-                    visited[i] = 1;
                 }
                     
             int flag = true;
@@ -59,13 +57,11 @@ public:
                 
                 for (int nxt: next[cur])
                 {
-                    if (visited[nxt]) continue;
                     sum[nxt] += sum[cur];
                     in[nxt]--;
                     
                     if (in[nxt]==1)
-                    {                        
-                        visited[nxt] = 1;                        
+                    {                      
                         q.push(nxt);
                     }                        
                 }            
