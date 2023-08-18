@@ -1,15 +1,15 @@
 class Solution {
     public int collectTheCoins(int[] coins, int[][] edges) {
         int n = coins.length;
-        Map<Integer, Set<Integer>> map = new HashMap<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
         int[] indeg = new int[n];
         for (int[] edge : edges)    {
             int u = edge[0];
             int v = edge[1];
             if (!map.containsKey(u))
-                map.put(u, new HashSet<>());
+                map.put(u, new LinkedList<>());
             if (!map.containsKey(v))
-                map.put(v, new HashSet<>());
+                map.put(v, new LinkedList<>());
             map.get(u).add(v);
             map.get(v).add(u);
             indeg[u]++;
@@ -27,7 +27,6 @@ class Solution {
             delete.add(u);
             for (int v : map.get(u))    {
                 indeg[v]--;
-                map.get(v).remove(u);
                 if (indeg[v] == 1 && coins[v] == 0) {
                     q.offer(v);
                 }
@@ -39,11 +38,13 @@ class Solution {
         for (int i = 0; i < n; i++)
             if (indeg[i] == 1 && !delete.contains(i))
                 q.offer(i);
-        
+        Set<Integer> vis = new HashSet<>();
         while (!q.isEmpty())    {
             int u = q.poll();
+            vis.add(u);
             for (int v : map.get(u))    {
-                map.get(v).remove(u);
+                if (delete.contains(v) || vis.contains(v))
+                    continue;
                 indeg[v]--;
                 depth[v] = Math.max(depth[v], depth[u] + 1);
                 if (indeg[v] == 1 && !delete.contains(v))
