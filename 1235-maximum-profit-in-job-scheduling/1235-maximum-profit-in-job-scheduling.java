@@ -18,5 +18,3 @@ class Solution {
         return dp.lastEntry().getValue();
     }
 }
-
-// dp[i] = max(dp[i], dp[startTime] + profit)
