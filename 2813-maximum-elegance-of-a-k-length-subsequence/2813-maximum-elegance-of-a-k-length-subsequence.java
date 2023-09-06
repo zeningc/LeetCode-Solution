@@ -1,36 +1,31 @@
 class Solution {
     public long findMaximumElegance(int[][] items, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
         Arrays.sort(items, (a, b) -> b[0] - a[0]);
-        Queue<Integer> pq = new PriorityQueue<>((a, b) -> items[a][0] - items[b][0]);
-        long ans = 0;
+        LinkedList<Integer> dupProfit = new LinkedList<>();
+        boolean[] seen = new boolean[items.length + 1];
+        int cnt = 0;
+        long p = 0L;
         for (int i = 0; i < k; i++) {
-            pq.offer(i);
-            freq.put(items[i][1], freq.getOrDefault(items[i][1], 0) + 1);
-            ans += items[i][0];
+            if (!seen[items[i][1]])
+                cnt++;
+            if (seen[items[i][1]])
+                dupProfit.offer(items[i][0]);
+            seen[items[i][1]] = true;
+            p += items[i][0];
         }
-        long profit = ans;
-        ans += (long)freq.size() * freq.size();
+        
+        long ans = p + (long)cnt * cnt;
         
         for (int i = k; i < items.length; i++)  {
-            boolean findReplace = false;
-            if (freq.containsKey(items[i][1]))
+            if (seen[items[i][1]])
                 continue;
-            while (!pq.isEmpty())   {
-                int j = pq.poll();
-                if (freq.get(items[j][1]) == 1)
-                    continue;
-                freq.put(items[j][1], freq.get(items[j][1]) - 1);
-                findReplace = true;
-                profit -= items[j][0];
+            if (dupProfit.isEmpty())
                 break;
-            }
-            if (!findReplace)
-                break;
-            pq.offer(i);
-            profit += items[i][0];
-            freq.put(items[i][1], freq.getOrDefault(items[i][1], 0) + 1);
-            ans = Math.max(ans, profit + (long)freq.size() * freq.size());
+            cnt++;
+            p -= dupProfit.pollLast();
+            p += items[i][0];
+            seen[items[i][1]] = true;
+            ans = Math.max(ans, p + (long)cnt * cnt);
         }
         
         return ans;
