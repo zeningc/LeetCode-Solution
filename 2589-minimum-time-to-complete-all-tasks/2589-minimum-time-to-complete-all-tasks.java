@@ -17,24 +17,22 @@ class Solution {
                     lo = mid + 1;
             }
             
-            int left = hi;
+            int idx = hi;
             int overlap = 0;
-            if (list.get(left)[1] >= start)
-                overlap += Math.min(end, list.get(left)[1]) - start + 1;
+            if (list.get(idx)[1] >= start)
+                overlap += Math.min(end, list.get(idx)[1]) - start + 1;
             
-            overlap += list.get(list.size() - 1)[2] - list.get(left)[2];
+            overlap += list.get(list.size() - 1)[2] - list.get(idx)[2];
             
             if (overlap < duration) {
                 int newEnd = end;
                 int newTotal = duration - overlap;
                 int newStart = newEnd - newTotal + 1;
-                int preStart = list.get(list.size() - 1)[0];
-                int preEnd = list.get(list.size() - 1)[1];
                 int preTotal = list.get(list.size() - 1)[2];
                 newTotal += preTotal;
                 while (!list.isEmpty() && list.get(list.size() - 1)[1] >= newStart - 1)  {
-                    preStart = list.get(list.size() - 1)[0];
-                    preEnd = list.get(list.size() - 1)[1];
+                    int preStart = list.get(list.size() - 1)[0];
+                    int preEnd = list.get(list.size() - 1)[1];
                     int gap = preEnd + 1 - newStart;
                     newStart = preStart - gap;
                     list.remove(list.size() - 1);
