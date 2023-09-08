@@ -4,16 +4,17 @@ class Solution {
         for (int num : nums)
             freq.put((num % value + value) % value, freq.getOrDefault((num % value + value) % value, 0) + 1);
         int minVal = Integer.MAX_VALUE;
+        int first = -1;
         for (int i = 0; i < value; i++) {
-            if (freq.getOrDefault(i, 0) == 0)
+            int f = freq.getOrDefault(i, 0);
+            if (f == 0)
                 return i;
-            minVal = Math.min(minVal, freq.getOrDefault(i, 0));
+            if (minVal > f)   {
+                minVal = f;
+                first = i;
+            }
         }
-        int ans = minVal * value;
-        for (int i = 0; i < value; i++)
-            if (freq.getOrDefault(i, 0) - minVal == 0)
-                return ans + i;
-        return -1;
+        return minVal * value + first;
     }
 }
 
