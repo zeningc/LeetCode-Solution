@@ -4,36 +4,39 @@ class Solution {
         int n = heights[0].length;
         int[][] ans = new int[m][n];
         
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < m; i++)
+        {
             Deque<Integer> stack = new LinkedList<>();
-            for (int j = n - 1; j >= 0; j--) {
-                int cnt = 0;
-                int prev = -1;
-                while (!stack.isEmpty() && heights[i][j] > heights[i][stack.peek()])   {
-                    if (prev != heights[i][stack.peek()])
-                        cnt++;
-                    prev = heights[i][stack.pop()];
+            for (int j = 0; j < n; j++)
+            {
+                int nxt = j;
+                while (!stack.isEmpty() && heights[i][j] > heights[i][stack.peek()])
+                {
+                    int cur = stack.pop();
+                    if (heights[i][nxt] != heights[i][cur])
+                        ans[i][cur]++; 
+                    nxt = cur;
                 }
                 if (!stack.isEmpty())
-                    cnt++;
-                ans[i][j] += cnt;
+                    ans[i][stack.peek()]++;
                 stack.push(j);
             }
         }
         
         for (int j = 0; j < n; j++) {
             Deque<Integer> stack = new LinkedList<>();
-            for (int i = m - 1; i >= 0; i--) {
-                int cnt = 0;
-                int prev = -1;
-                while (!stack.isEmpty() && heights[i][j] > heights[stack.peek()][j])   {
-                    if (prev != heights[stack.peek()][j])
-                        cnt++;
-                    prev = heights[stack.pop()][j];
+            for (int i = 0; i < m; i++)
+            {
+                int nxt = i;
+                while (!stack.isEmpty() && heights[i][j] > heights[stack.peek()][j])
+                {
+                    int cur = stack.pop();
+                    if (heights[nxt][j] != heights[cur][j])
+                        ans[cur][j]++; 
+                    nxt = cur;
                 }
                 if (!stack.isEmpty())
-                    cnt++;
-                ans[i][j] += cnt;
+                    ans[stack.peek()][j]++;
                 stack.push(i);
             }
         }
