@@ -7,10 +7,10 @@ class Solution {
         {
             int cur = node.get(0);
             int p = node.get(1);
-            if (childCnt.getOrDefault(p, 0) >= 2)
-            {
-                return false;
-            }
+            // if (childCnt.getOrDefault(p, 0) >= 2)
+            // {
+            //     return false;
+            // }
             
             while (!stack.isEmpty() && stack.peek() != p)
             {
