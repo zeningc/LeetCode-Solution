@@ -4,6 +4,7 @@ class Solution {
         Map<Integer, Integer> parentMap = new HashMap<>();
         int pre = -1;
         int preParent = -1;
+        Deque<Integer> stack = new LinkedList<>();
         for (List<Integer> node : nodes)
         {
             int cur = node.get(0);
@@ -13,21 +14,16 @@ class Solution {
                 return false;
             }
             parentMap.put(cur, p);
-            boolean valid = pre == -1;
             
-            int temp = pre;
-            while (temp != -1)
+            while (!stack.isEmpty() && stack.peek() != p)
             {
-                if (p == temp)
-                {
-                    valid = true;
-                    break;
-                }
-                temp = parentMap.getOrDefault(temp, -1);
+                stack.pop();
             }
-            if (!valid)
-                return false;
             
+            if (stack.isEmpty() && pre != -1)
+                return false;
+
+            stack.push(cur);
             pre = cur;
         }
         
