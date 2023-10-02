@@ -1,56 +1,62 @@
 class Solution {
-    Map<Integer, List<Integer>> graph;
-    int[] nums;
     int ans;
+    Map<Integer, List<Integer>> graph;
+    int n;
+    int[] nums;
     public int minimumScore(int[] nums, int[][] edges) {
         ans = Integer.MAX_VALUE;
         graph = new HashMap<>();
+        n = nums.length;
         this.nums = nums;
-        for (int[] edge : edges)    {
+        for (int[] edge : edges)
+        {
             int u = edge[0];
             int v = edge[1];
-            if (!graph.containsKey(u))
-                graph.put(u, new LinkedList<>());
-            if (!graph.containsKey(v))
-                graph.put(v, new LinkedList<>());
-            graph.get(u).add(v);
-            graph.get(v).add(u);
+            graph.computeIfAbsent(u, a -> new LinkedList<Integer>()).add(v);
+            graph.computeIfAbsent(v, a -> new LinkedList<Integer>()).add(u);
         }
         
-        for (int[] edge : edges)    {
-            int a = getAll(edge[0], edge[1]);
-            int b = getAll(edge[1], edge[0]);
-            
-            dfs(a, b, edge[1], edge[0]);
-            dfs(b, a, edge[0], edge[1]);
+        for (int[] edge : edges)
+        {
+            int a = edge[0];
+            int b = edge[1];
+            int xor1 = dfs(a, b);
+            int xor2 = dfs(b, a);
+            dfs2(a, b, xor1, xor2);
+            dfs2(b, a, xor2, xor1);
         }
         
         return ans;
     }
     
-    int dfs(int xor, int ttl, int u, int parent) {
-        int xorAns = nums[u];
-        for (int v : graph.get(u))  {
-            if (parent == v)
+    int dfs(int u, int p)
+    {
+        int xor = nums[u];
+        for (int v : graph.get(u))
+        {
+            if (v == p)
                 continue;
-            int t = dfs(xor, ttl, v, u);
-            int max = Math.max(xor, Math.max(ttl ^ t, t));
-            int min = Math.min(xor, Math.min(ttl ^ t, t));
-            ans = Math.min(max - min, ans);
-            xorAns ^= t;
+            xor ^= dfs(v, u);
         }
-        return xorAns;
+        return xor;
     }
     
-    int getAll(int u, int parent)    {
-        int ans = nums[u];
-        
-        for (int v : graph.get(u))  {
-            if (parent == v)
+    int dfs2(int u, int p, int curXor, int otherXor)
+    {
+        int xor = nums[u];
+        for (int v : graph.get(u))
+        {
+            if (v == p)
                 continue;
-            ans ^= getAll(v, u);
+            int childXor = dfs2(v, u, curXor, otherXor);
+            ans = Math.min(ans, calc(otherXor, curXor ^ childXor, childXor));
+            xor ^= childXor;
         }
-        
-        return ans;
+        return xor;
+    }
+    
+    int calc(int a, int b, int c)
+    {
+        return Math.max(a, Math.max(b, c)) - Math.min(a, Math.min(b, c));
     }
 }
