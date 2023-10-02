@@ -1,9 +1,7 @@
 class Solution {
     public boolean isPreorder(List<List<Integer>> nodes) {
         Map<Integer, Integer> childCnt = new HashMap<>();
-        Map<Integer, Integer> parentMap = new HashMap<>();
         int pre = -1;
-        int preParent = -1;
         Deque<Integer> stack = new LinkedList<>();
         for (List<Integer> node : nodes)
         {
@@ -13,7 +11,6 @@ class Solution {
             {
                 return false;
             }
-            parentMap.put(cur, p);
             
             while (!stack.isEmpty() && stack.peek() != p)
             {
