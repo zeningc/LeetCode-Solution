@@ -1,55 +1,62 @@
 class Solution {
+    int[] nodeSum;
+    int[] nodeCnt;
+    int[] ans;
+    int n;
+    Map<Integer, List<Integer>> graph;
     public int[] sumOfDistancesInTree(int n, int[][] edges) {
-        int[] ans = new int[n];
-        int[] cnt = new int[n];
-        int[] dist = new int[n];
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        int[] parent = new int[n];
-        for (int[] edge : edges)    {
+        if (n == 1)
+            return new int[] {0};
+        graph = new HashMap<>();
+        nodeSum = new int[n];
+        nodeCnt = new int[n];
+        ans = new int[n];
+        this.n = n;
+        for (int[] edge : edges)
+        {
             int u = edge[0];
             int v = edge[1];
-            if (!graph.containsKey(u))
-                graph.put(u, new LinkedList<>());
-            if (!graph.containsKey(v))
-                graph.put(v, new LinkedList<>());
-            graph.get(u).add(v);
-            graph.get(v).add(u);
+            graph.computeIfAbsent(u, a -> new LinkedList<Integer>()).add(v);
+            graph.computeIfAbsent(v, a -> new LinkedList<Integer>()).add(u);
         }
-        dfs(graph, parent, cnt, dist, -1, 0);
-        ans[0] = dist[0];
-        dfs1(graph, parent, cnt, dist, ans, -1, 0);
+        
+        dfs1(0, -1);
+        dfs2(0, -1);
         return ans;
     }
     
-    int[] dfs(Map<Integer, List<Integer>> graph, int[] parent, int[] cnt, int[] dist, int p, int u)  {
-        parent[u] = p;
-        int[] ret = new int[] {1, 0};
-        if (graph.containsKey(u))   {
-            for (int v : graph.get(u))  {
-                if (v == p)
-                    continue;
-                int[] next = dfs(graph, parent, cnt, dist, u, v);
-                ret[0] += next[0];
-                ret[1] += next[1] + next[0];
-            }
+    int[] dfs1(int u, int p)
+    {
+        int curSum = 0;
+        int curCnt = 0;
+        for (int v : graph.get(u))
+        {
+            if (v == p)
+                continue;
+            int[] summary = dfs1(v, u);
+            int cnt = summary[0];
+            int childSum = summary[1];
+            curCnt += cnt;
+            curSum += childSum + cnt;
         }
-        cnt[u] = ret[0];
-        dist[u] = ret[1];
-        return ret;
+        nodeSum[u] = curSum;
+        nodeCnt[u] = curCnt + 1;
+        return new int[] {curCnt + 1, curSum};
     }
     
-    void dfs1(Map<Integer, List<Integer>> graph, int[] parent, int[] cnt, int[] dist, int[] ans, int p, int u)  {
-        if (u != 0)
-            ans[u] = ans[parent[u]] - 2 * cnt[u] + cnt[0];
-        if (graph.containsKey(u))   {
-            for (int v : graph.get(u))  {
-                if (v == p)
-                    continue;
-                dfs1(graph, parent, cnt, dist, ans, u, v);
-            }
+    void dfs2(int u, int p)
+    {
+        if (p != -1)
+            ans[u] = ans[p] - nodeCnt[u] + n - nodeCnt[u];
+        else
+            ans[u] = nodeSum[u];
+        
+        for (int v : graph.get(u))
+        {
+            if (v == p)
+                continue;
+            dfs2(v, u);
         }
+        
     }
 }
-
-
-// cur + parent - cur - curCnt + parentCnt - curCnt
