@@ -10,14 +10,12 @@ class Solution {
         {
             while (!stack.isEmpty() && s.charAt(stack.peek()) <= s.charAt(i) && !stat.hasSmaller(s.charAt(stack.peek())))
             {
-                // debug(s, stack);
                 int pop = stack.pop();
                 sb.append(s.charAt(pop));
             }
             
             stack.push(i);
             stat.consumeChar(s.charAt(i));
-            // debug(s, stack);
         }
         
         while (!stack.isEmpty())
@@ -27,16 +25,6 @@ class Solution {
         
         return sb.toString();
     }
-    
-    void debug(String s, Deque<Integer> stack)
-    {
-        for (int num : stack)
-        {
-            System.out.print(s.charAt(num));
-        }
-        System.out.println();
-    }
-    
 }
 
 class CharStat
@@ -56,11 +44,6 @@ class CharStat
         updatePointer();
     }
     
-    void initPointer()
-    {
-        p = 0;
-    }
-    
     void updatePointer()
     {
         while (p < 26)
@@ -74,13 +57,6 @@ class CharStat
     void consumeChar(char c)
     {
         freq[c - 'a']--;
-        updatePointer();
-    }
-    
-    void addChar(char c)
-    {
-        freq[c - 'a']++;
-        initPointer();
         updatePointer();
     }
     
