@@ -11,7 +11,6 @@ class Solution {
             {
                 int pop = stack.pop();
                 cnt = Math.max(cnt + 1, t[pop]);
-                
             }
             t[i] = cnt;
             ans = Math.max(ans, t[i]);
