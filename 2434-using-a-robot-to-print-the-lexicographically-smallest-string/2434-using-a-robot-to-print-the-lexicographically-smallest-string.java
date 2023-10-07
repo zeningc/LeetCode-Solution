@@ -1,67 +1,30 @@
 class Solution {
     public String robotWithString(String s) {
-        Deque<Integer> stack = new LinkedList<>();
         int n = s.length();
-        CharStat stat = new CharStat(s);
-        
-        StringBuilder sb = new StringBuilder();
-        
-        for (int i = 0; i < n; i++)
+        int[] min = new int[n];
+        for (int i = n - 1; i >= 0; i--)
         {
-            while (!stack.isEmpty() && s.charAt(stack.peek()) <= s.charAt(i) && !stat.hasSmaller(s.charAt(stack.peek())))
+            char c = s.charAt(i);
+            if (i == n - 1)
             {
-                int pop = stack.pop();
-                sb.append(s.charAt(pop));
+                min[i] = c;
+                continue;
             }
             
-            stack.push(i);
-            stat.consumeChar(s.charAt(i));
+            min[i] = Math.min(c, min[i + 1]);
         }
-        
-        while (!stack.isEmpty())
+        StringBuilder sb = new StringBuilder();
+        Deque<Character> stack = new LinkedList<>();
+        for (int i = 0; i <= n; i++)
         {
-            sb.append(s.charAt(stack.pop()));
+            while (!stack.isEmpty() && (i == n || stack.peek() <= min[i]))
+            {
+                sb.append(stack.pop());
+            }
+            if (i != n)
+                stack.push(s.charAt(i));
         }
         
         return sb.toString();
-    }
-}
-
-class CharStat
-{
-    
-    int[] freq;
-    int p;
-    
-    public CharStat(String s)
-    {
-        freq = new int[26];
-        p = 0;
-        for (char c : s.toCharArray())
-        {
-            freq[c - 'a']++;
-        }
-        updatePointer();
-    }
-    
-    void updatePointer()
-    {
-        while (p < 26)
-        {
-            if (freq[p] != 0)
-                break;
-            p++;
-        }
-    }
-    
-    void consumeChar(char c)
-    {
-        freq[c - 'a']--;
-        updatePointer();
-    }
-    
-    boolean hasSmaller(char c)
-    {
-        return p < c - 'a';
     }
 }
