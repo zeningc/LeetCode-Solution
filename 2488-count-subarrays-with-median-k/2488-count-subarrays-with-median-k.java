@@ -1,40 +1,47 @@
 class Solution {
     public int countSubarrays(int[] nums, int k) {
+        int p = 0;
         int n = nums.length;
-        int pivot = -1;
-        int pivotRight = -1;
         for (int i = 0; i < n; i++)
+        {    
             if (nums[i] == k)
-                pivot = i;
-        Map<Integer, Integer> map = new HashMap<>();
+            {
+                p = i;
+                break;
+            }
+        }
+        Map<Integer, Integer> m = new HashMap<>();
         int cnt = 0;
-        for (int i = pivot; i < n; i++) {
-            int len = i - pivot;
+        for (int i = p; i < n; i++)
+        {
             if (nums[i] < k)
                 cnt++;
-            map.put(len - 2 * cnt, map.getOrDefault(len - 2 * cnt, 0) + 1);
+            int len = i - p;
+            m.put(2 * cnt - len, m.getOrDefault(2 * cnt - len, 0) + 1);
         }
+        
         int ans = 0;
         cnt = 0;
-        for (int i = pivot; i >= 0; i--)    {
-            int len = pivot - i;
+        for (int i = p; i >= 0; i--)
+        {
+            int len = p - i;
             if (nums[i] < k)
                 cnt++;
-            ans += map.getOrDefault(2 * cnt - len, 0);
-            ans += map.getOrDefault(2 * cnt - len + 1, 0);
+            ans += m.getOrDefault(len - 2 * cnt, 0);
+            ans += m.getOrDefault(len - 2 * cnt - 1, 0);
         }
         
         return ans;
     }
 }
 
-// cnt len - cnt cnt1 len1 - cnt1
 
-// cnt + cnt1 == len - cnt + len1 - cnt1
-// 2cnt - len = len1 - 2cnt1
-// ------------------------------------
-// cnt + cnt1 + 1 == len - cnt + len1 - cnt1
-// 2cnt - len + 1 == len1 - 2cnt1
+/*
+cnt + cnt1 = len1 - cnt1 + len - cnt
+OR
+cnt + cnt1 + 1 = len1 - cnt1 + len - cnt
 
 
+2 * cnt - len = len1 - 2 * cnt1 / len1 - 2 * cnt1 - 1
 
+*/
