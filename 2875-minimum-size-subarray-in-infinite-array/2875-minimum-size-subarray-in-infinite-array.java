@@ -12,23 +12,14 @@ class Solution {
         m.put(0L, -1);
         long ans = Long.MAX_VALUE;
         long sum = 0;
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < 2 * n; i++)
         {
-            sum += nums[i];
+            sum += nums[i < n ? i : i - n];
             if (m.containsKey(sum - target))
             {
                 ans = Math.min(ans, base + i - m.get(sum - target));
             }
             m.put(sum, i);
-        }
-        
-        for (int i = n; i < 2 * n; i++)
-        {
-            sum += nums[i - n];
-            if (m.containsKey(sum - target))
-            {
-                ans = Math.min(ans, base + i - m.get(sum - target));
-            }
         }
         
         
