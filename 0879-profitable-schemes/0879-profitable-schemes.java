@@ -6,19 +6,18 @@ class Solution {
         int mod = (int)1e9 + 7;
         for (int i = 1; i <= m; i++)
         {
-            for (int j = n; j >= 0; j--)
+            for (int j = n; j >= group[i - 1]; j--)
             {
                 for (int k = minProfit; k >= 0; k--)
                 {
-                    if (j - group[i - 1] >= 0)
-                        dp[j][k] = (dp[j][k] + dp[j - group[i - 1]][Math.max(k - profit[i - 1], 0)]) % mod;
+                    dp[j][k] = (dp[j][k] + dp[j - group[i - 1]][Math.max(k - profit[i - 1], 0)]) % mod;
                 }
             }
         }
         
         long ans = 0L;
         for (int i = 0; i <= n; i++)
-                ans = (ans + dp[i][minProfit]) % mod;
+            ans = (ans + dp[i][minProfit]) % mod;
         
         return (int)(ans % mod);
     }
