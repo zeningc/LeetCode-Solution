@@ -12,10 +12,6 @@ class Solution {
             }
         }
         
-        int ans = 0;
-        for (int i = 0; i <= budget; i++)
-            ans = Math.max(ans, dp[i]);
-        
-        return ans;
+        return dp[budget];
     }
 }
