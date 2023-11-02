@@ -4,21 +4,29 @@ class Solution {
         dp[0][0] = 0;
         dp[0][1] = 0;
         int maxLen = -1;
-        int maxLenEnd = -1;
+        int maxLenEnd = 0;
+        int maxZeroLen = 0;
+        int maxOneLen = 0;
+        int maxZeroLenEnd = 0;
+        int maxOneLenEnd = 0;
         for (int i = 1; i <= n; i++)    {
-            int len = words[i - 1].length();
-            int pre = 0;
-            for (int j = 1; j < i; j++) {
-                if (1 - groups[i - 1] != groups[j - 1])
-                    continue;
-                if (len < dp[j][0] + words[i - 1].length())    {
-                    len = dp[j][0] + words[i - 1].length();
-                    pre = j;
+            if (groups[i - 1] == 0) {
+                dp[i] = new int[] {words[i - 1].length() + maxOneLen, maxOneLenEnd};
+                if (dp[i][0] > maxZeroLen)  {
+                    maxZeroLen = dp[i][0];
+                    maxZeroLenEnd = i;
                 }
             }
-            dp[i] = new int[] {len, pre};
-            if (len > maxLen)   {
-                maxLen = len;
+            else    {
+                dp[i] = new int[] {words[i - 1].length() + maxZeroLen, maxZeroLenEnd};
+                if (dp[i][0] > maxOneLen)  {
+                    maxOneLen = dp[i][0];
+                    maxOneLenEnd = i;
+                }
+            }
+            
+            if (dp[i][0] > maxLen)   {
+                maxLen = dp[i][0];
                 maxLenEnd = i;
             }
         }
