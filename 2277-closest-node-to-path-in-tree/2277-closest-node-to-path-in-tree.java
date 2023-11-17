@@ -1,96 +1,56 @@
 class Solution {
-    Map<Integer, List<Integer>> graph;
-    int[] parent;
     public int[] closestNode(int n, int[][] edges, int[][] query) {
-        graph = new HashMap<>();
-        parent = new int[n];
-        for (int[] edge : edges)
-        {
+        if (n == 1)
+            return new int[n];
+        int[][] dist = new int[n][n];
+        Map<Integer, List<Integer>> edgeMap = new HashMap<>();
+        for (int[] edge : edges)    {
             int u = edge[0];
             int v = edge[1];
-            graph.computeIfAbsent(u, a -> new LinkedList<Integer>()).add(v);
-            graph.computeIfAbsent(v, a -> new LinkedList<Integer>()).add(u);
+            edgeMap.computeIfAbsent(u, x -> new LinkedList<>()).add(v);
+            edgeMap.computeIfAbsent(v, x -> new LinkedList<>()).add(u);
         }
-        dfs(0, -1);
+        
+        for (int i = 0; i < n; i++) {
+            dfs(edgeMap, dist, i, i, -1, 0);
+        }
         int[] ans = new int[query.length];
-        for (int i = 0; i < query.length; i++)
-        {
-            int[] q = query[i];
-            int u = q[0];
-            int v = q[1];
+        int i = 0;
+        for (int[] q : query)   {
+            int start = q[0];
+            int end = q[1];
             int node = q[2];
-            Set<Integer> path = new HashSet<>();
-            findPath(path, u, v);
-            Deque<Integer> queue = new LinkedList<>();
-            queue.offer(node);
-            Set<Integer> vis = new HashSet<>();
-            while (!queue.isEmpty())
-            {
-                int cur = queue.poll();
-                if (vis.contains(cur))
-                    continue;
-                vis.add(cur);
-                if (path.contains(cur))
-                {
-                    ans[i] = cur;
-                    break;
-                }
-                if (!graph.containsKey(cur))
-                    continue;
-                for (int nxt : graph.get(cur))
-                {
-                    if (!vis.contains(nxt))
-                        queue.offer(nxt);
-                }
-            }
+            ans[i++] = dfs1(edgeMap, dist, start, end, node, -1)[1];
         }
         
         return ans;
     }
     
-    void dfs(int u, int p)
-    {
-        parent[u] = p;
-        if (!graph.containsKey(u))
-            return;
-        for (int v : graph.get(u))
-        {
-            if (p == v)
+    void dfs(Map<Integer, List<Integer>> edgeMap, int[][] dist, int start, int u, int p, int d)  {
+        dist[start][u] = d;
+        for (int v : edgeMap.get(u))    {
+            if (v == p)
                 continue;
-            dfs(v, u);
+            dfs(edgeMap, dist, start, v, u, d + 1);
         }
     }
     
-    void findPath(Set<Integer> set, int u, int v)
-    {
-        List<Integer> path1 = new ArrayList<>();
-        List<Integer> path2 = new ArrayList<>();
-        int t = u;
-        while (t != -1)
-        {
-            path1.add(0, t);
-            t = parent[t];
+    
+    int[] dfs1(Map<Integer, List<Integer>> edgeMap, int[][] dist, int u, int end, int node, int p)   {
+        int d = dist[u][node];
+        int target = u;
+        for (int v : edgeMap.get(u))    {
+            if (v == p)
+                continue;
+            if (dist[v][end] != dist[u][end] - 1)
+                continue;
+            int[] nxt = dfs1(edgeMap, dist, v, end, node, u);
+            if (nxt[0] < d) {
+                d = nxt[0];
+                target = nxt[1];
+            }
         }
-        t = v;
-        while (t != -1)
-        {
-            path2.add(0, t);
-            t = parent[t];
-        }
-        int p = 0;
-        while (p < path1.size() && p < path2.size() && path1.get(p).equals(path2.get(p)))
-            p++;
         
-        for (int i = p - 1; i < path1.size(); i++)
-            if (i >= 0)
-                set.add(path1.get(i));
-
-        for (int i = p - 1; i < path2.size(); i++)
-            if (i >= 0)
-                set.add(path2.get(i));
-        
-        return;
+        return new int[] {d, target};
     }
-    
-    
 }
