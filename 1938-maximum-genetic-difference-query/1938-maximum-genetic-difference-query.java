@@ -92,26 +92,4 @@ class TrieNode  {
             root.children[b] = null;
         root.cnt--;
     }
-    
-    // public static TrieNode copy(TrieNode root)  {
-    //     if (root == null)
-    //         return null;
-    //     TrieNode copyNode = new TrieNode();
-    //     copyNode.children[0] = copy(root.children[0]);
-    //     copyNode.children[1] = copy(root.children[1]);
-    //     copyNode.n = root.n;
-    //     return copyNode;
-    // }
-    
-    // public static void getAllNum(Set<Integer> set, TrieNode root)    {
-    //     if (root == null)
-    //         return;
-    //     if (root.n != -1)   {
-    //         set.add(root.n);
-    //         return;
-    //     }
-    //     getAllNum(set, root.children[0]);
-    //     getAllNum(set, root.children[1]);
-    //     return;
-    // }
 }
