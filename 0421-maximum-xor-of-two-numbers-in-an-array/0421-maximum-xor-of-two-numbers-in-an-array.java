@@ -13,25 +13,21 @@ class Solution {
 
 class TrieNode  {
     int n;
-    int cnt;
     TrieNode[] children;
     
     public TrieNode()   {
         n = -1;
-        cnt = 0;
         children = new TrieNode[2];
     }
     
     public void insert(int num)    {
         TrieNode node = this;
         for (int i = 31; i >= 0; i--)   {
-            node.cnt++;
             int b = (num & (1 << i)) != 0 ? 1 : 0;
             if (node.children[b] == null)
                 node.children[b] = new TrieNode();
             node = node.children[b];
         }
-        node.cnt++;
         node.n = num;
     }
     
@@ -39,26 +35,14 @@ class TrieNode  {
         TrieNode node = this;
         for (int i = 31; i >= 0; i--)   {
             int b = (num & (1 << i)) != 0 ? 1 : 0;
-            if (node.children[1 - b] != null && node.children[1 - b].cnt > 0)
+            if (node.children[1 - b] != null)
                 node = node.children[1 - b];
-            else if (node.children[b] != null && node.children[b].cnt > 0)
+            else if (node.children[b] != null)
                 node = node.children[b];
             else
                 return -1;
         }
         
         return node.n;
-    }
-    
-    public void delete(int num) {
-        TrieNode node = this;
-        for (int i = 31; i >= 0; i--)   {
-            node.cnt--;
-            int b = (num & (1 << i)) != 0 ? 1 : 0;
-            if (node.children[b] == null)
-                return;
-            node = node.children[b];
-        }
-        node.cnt--;
     }
 }
