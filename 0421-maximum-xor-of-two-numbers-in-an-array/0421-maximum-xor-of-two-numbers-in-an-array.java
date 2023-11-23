@@ -5,7 +5,6 @@ class Solution {
             root.insert(num);
         int ans = 0;
         for (int num : nums)    {
-            root.delete(num);
             ans = Math.max(ans, root.findMaxXor(num) ^ num);
         }
         return ans;
