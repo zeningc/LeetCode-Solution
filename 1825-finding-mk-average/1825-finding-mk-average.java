@@ -33,7 +33,7 @@ class MKAverage {
                     shift(midMap, maxMap, 1);
             }
         }
-        else if (maxMapSize < k || !maxMap.isEmpty() && num >= maxMap.firstKey())  {
+        else if (maxMapSize < k || num >= maxMap.firstKey())  {
             update(maxMap, num, 1);
             if (maxMapSize > k) {
                 shift(midMap, maxMap, -1);
@@ -68,6 +68,9 @@ class MKAverage {
         return midMapSum / (m - 2 * k);
     }
     
+    /*
+    update treemap m, let m[key] += delta
+    */
     private void update(TreeMap<Integer, Integer> m, int num, int delta) {
         int cnt = m.getOrDefault(num, 0) + delta;
         if (cnt == 0)
@@ -87,6 +90,12 @@ class MKAverage {
         }
     }
     
+    /*
+    shift element from one treemap to another
+    a.lastKey() <= b.firstKey()
+    if delta == 1: shift from a to b
+    if delta == -1: shift from b to a
+    */
     private void shift(TreeMap<Integer, Integer> a, TreeMap<Integer, Integer> b, int delta) {
         if (delta == 1) {
             int num = a.lastKey();
