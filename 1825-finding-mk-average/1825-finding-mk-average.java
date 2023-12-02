@@ -38,8 +38,6 @@ class MKAverage {
             update(maxMap, num, 1);
             if (maxMapSize > k) {
                 shift(midMap, maxMap, -1);
-                if (minMapSize < k)
-                    shift(minMap, midMap, -1);
             }
         }
         else    {
