@@ -32,9 +32,8 @@ class MKAverage {
                 if (maxMapSize < k)
                     shift(midMap, maxMap, 1);
             }
-                
         }
-        else if (!maxMap.isEmpty() && num >= maxMap.firstKey())  {
+        else if (maxMapSize < k || !maxMap.isEmpty() && num >= maxMap.firstKey())  {
             update(maxMap, num, 1);
             if (maxMapSize > k) {
                 shift(midMap, maxMap, -1);
@@ -42,8 +41,6 @@ class MKAverage {
         }
         else    {
             update(midMap, num, 1);
-            if (maxMapSize < k)
-                shift(midMap, maxMap, 1);
         }
         
         
