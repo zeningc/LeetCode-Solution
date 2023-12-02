@@ -24,10 +24,10 @@ class Solution {
             while (size-- > 0)  {
                 int x = q.poll();
                 ans[x] = cnt;
-                int start = Math.max(0, x - k + 1);
-                int end = Math.min(n - 1, x + k - 1);
-                int lo = 2 * start + k - x - 1;
-                int hi = 2 * end - x - k + 1;
+                int minArrStart = Math.max(0, x - k + 1);
+                int maxArrEnd = Math.min(n - 1, x + k - 1);
+                int lo = 2 * minArrStart + k - x - 1;
+                int hi = 2 * maxArrEnd - x - k + 1;
                 TreeSet<Integer> set;
                 set = lo % 2 == 0 ? even : odd;
                 NavigableSet<Integer> subSet = set.subSet(lo, true, hi, true); 
