@@ -1,8 +1,7 @@
 class Solution {
     public int minGroupsForValidAssignment(int[] nums) {
         Map<Integer, Integer> m = new HashMap<>();
-        for (int num : nums)
-            m.put(num, m.getOrDefault(num, 0) + 1);
+        Arrays.stream(nums).forEach(num -> m.put(num, m.getOrDefault(num, 0) + 1));
         int hi = m.values().stream().max(Integer::compareTo).orElse(0);
         int ans = nums.length;
         for (int i = hi; i >= 1; i--)  {
