@@ -1,21 +1,23 @@
 class Solution {
     public int numSubarrayBoundedMax(int[] nums, int left, int right) {
-        Deque<Integer> stack = new LinkedList<>();
+        int start = -1;
+        int validMax = -1;
         int ans = 0;
         int n = nums.length;
-        for (int i = 0; i <= n; i++) {
-            while (!stack.isEmpty() && (i == n || nums[stack.peek()] <= nums[i]))   {
-                int pop = stack.pop();
-                if (nums[pop] >= left && nums[pop] <= right)    {
-                    int lo = stack.isEmpty() ? -1 : stack.peek();
-                    int hi = i;
-                    ans += (pop - lo) * (hi - pop);
-                }
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > right)    {
+                start = -1;
+                validMax = -1;
+                continue;
             }
             
-            stack.push(i);
+            if (start == -1)
+                start = i;
+            if (nums[i] >= left && nums[i] <= right)
+                validMax = i;
+            if (validMax != -1)
+                ans += (validMax - start + 1);
         }
-        
         return ans;
     }
 }
