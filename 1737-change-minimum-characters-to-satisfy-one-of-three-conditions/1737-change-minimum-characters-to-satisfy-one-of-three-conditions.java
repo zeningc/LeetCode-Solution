@@ -42,9 +42,7 @@ class Solution {
         for (int i = 0; i < 26; i++)    {
                 ans = Math.min(ans, dp1[i][0] + dp2[i][1]);
                 ans = Math.min(ans, dp1[i][1] + dp2[i][0]);
-            for (int j = 0; j < 26; j++)    {
-                ans = Math.min(ans, distinctA[i] + distinctB[j]);
-            }
+                ans = Math.min(ans, distinctA[i] + distinctB[i]);
             if (ans == 1)   {
                 System.out.println(i);
             }
