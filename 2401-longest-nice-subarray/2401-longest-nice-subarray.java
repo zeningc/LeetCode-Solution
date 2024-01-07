@@ -1,34 +1,23 @@
 class Solution {
     public int longestNiceSubarray(int[] nums) {
-        int[] freq = new int[33];
-        int l = 0;
-        int ans = 1;
-        for (int r = 0; r < nums.length; r++)   {
-            for (int i = 0; i < 32; i++)    {
-                if ((nums[r] & (1 << i)) != 0)
-                    freq[i]++;
-            }
+        int n = nums.length;
+        int[] mem = new int[32];
+        Arrays.fill(mem, n);
+        int next = 0;
+        int ans = 0;
+        for (int i = n - 1; i >= 0; i--)    {
+            int minIdx = n;
+            for (int j = 0; j < 32; j++)
+                if ((nums[i] & (1 << j)) != 0)
+                    minIdx = Math.min(minIdx, mem[j]);
+            int len = Math.min(next + 1, minIdx - i);
+            next = len;
+            ans = Math.max(ans, len);
+            for (int j = 0; j < 32; j++)
+                mem[j] = (nums[i] & (1 << j)) == 0 ? mem[j] : i;
             
-            while (!check(freq))    {
-                for (int i = 0; i < 32; i++)    {
-                    if ((nums[l] & (1 << i)) != 0)
-                        freq[i]--;
-                }
-                l++;
-            }
-            
-            ans = Math.max(ans, r - l + 1);
         }
         
         return ans;
-    }
-    
-    boolean check(int[] freq)   {
-        for (int f : freq)  {
-            if (f > 1)
-                return false;
-        }
-        
-        return true;
     }
 }
