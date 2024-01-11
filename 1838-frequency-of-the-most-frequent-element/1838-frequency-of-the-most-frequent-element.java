@@ -3,18 +3,19 @@ class Solution {
         int n = nums.length;
         int i = 0;
         Arrays.sort(nums);
-        long[] presum = new long[n + 1];
+        long sum = 0;
         int p = 0;
         int ans = 0;
         while (i < n)   {
             int j = i;
             while (j < n && nums[j] == nums[i]) {
-                presum[j + 1] = presum[j] + nums[j];
+                sum += nums[j];
                 j++;
             }
-            int target = nums[i];
-            while ((long)(i - p) * target - (presum[i] - presum[p]) > k)
+            while ((long)(j - p) * nums[i] - sum > k)    {
+                sum -= nums[p];
                 p++;
+            }
             ans = Math.max(ans, j - p);
             i = j;
         }
