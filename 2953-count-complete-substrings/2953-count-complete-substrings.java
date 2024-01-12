@@ -28,11 +28,5 @@ class Solution {
         return ans;
     }
 }
-
-// xxxxxxx|xxx|xxxxxxx
-
-// presum[a-z][idx]
-
-// k 2*k ... 26*k
-
-// 26*k*n
+// Time Complexity: O(N*(26^2)) = O(N)
+// Space Complexity: O(26*N)
