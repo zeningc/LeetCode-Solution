@@ -3,15 +3,23 @@ class Solution {
         int n = nums.length;
         int lo = 0;
         Arrays.sort(nums);
-        long[] presum = new long[n + 1];
         int ans = 0;
+        int p = -1;
+        long presum = 0;
+        long sufsum = 0;
         for (int hi = 0; hi < n; hi++)  {
-            presum[hi + 1] = presum[hi] + nums[hi];
+            sufsum += nums[hi];
             while (true)    {
                 int mid = lo + (hi - lo) / 2;
-                int median = nums[mid];
-                long need = (long)median * (2 * mid - lo - hi + 1) - 2 * presum[mid + 1] + presum[lo] + presum[hi + 1];
+                long median = nums[mid];
+                for (int i = p + 1; i <= mid; i++)  {
+                    presum += nums[i];
+                    sufsum -= nums[i];
+                }
+                p = mid;
+                long need = median * (2 * mid - lo - hi + 1) - presum + sufsum;
                 if (need > k) {
+                    presum -= nums[lo];
                     lo++;
                     continue;
                 }
