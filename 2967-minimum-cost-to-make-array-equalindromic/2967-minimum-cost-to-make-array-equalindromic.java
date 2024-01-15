@@ -5,10 +5,6 @@ class Solution {
         long median = n % 2 == 0 ? (nums[n / 2] + nums[(n - 1) / 2]) / 2 : nums[n / 2];
         if (median < 10)
             return getCost(nums, median);
-        if (median <= 16)
-            return Math.min(getCost(nums, 9), getCost(nums, 11));
-        if (median < 20)
-            return getCost(nums, 22);
         
         String numStr = String.valueOf(median);
         String flipPartStr = numStr.substring(0, (numStr.length() + 1) / 2);
@@ -31,7 +27,7 @@ class Solution {
             }
         }
         else    {
-            if (String.valueOf(flipPart - 1).length() < String.valueOf(flipPart).length())    {
+            if (flipPart - 1 == 0 || String.valueOf(flipPart - 1).length() < String.valueOf(flipPart).length())    {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < numStr.length() - 1; i++)
                     sb.append('9');
