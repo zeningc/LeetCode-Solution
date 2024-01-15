@@ -1,14 +1,8 @@
 class Solution {
     public String nearestPalindromic(String n) {
         long num = Long.valueOf(n);
-        if (num <= 10)
+        if (num < 10)
             return String.valueOf(num - 1);
-        if (num == 11)
-            return "9";
-        if (num <= 16)
-            return "11";
-        if (num < 20)
-            return "22";
         String flipPartStr = n.substring(0, ((n.length() + 1) / 2));
         long flipPart = Long.valueOf(flipPartStr);
             
@@ -21,7 +15,7 @@ class Solution {
         }
         long b;
         if (a > num)    {
-            if (String.valueOf(flipPart - 1).length() < flipPartStr.length())
+            if (flipPart - 1 == 0 || String.valueOf(flipPart - 1).length() < flipPartStr.length())
                 b = Long.valueOf(repeat('9', n.length() - 1));
             else
                 b = flip(flipPart - 1, num, n);
