@@ -1,47 +1,49 @@
 class Solution {
     public int findMinimumTime(int[][] tasks) {
+        List<int[]> arr = new ArrayList<>();
         Arrays.sort(tasks, (a, b) -> a[1] - b[1]);
-        List<int[]> list = new ArrayList<>(2000);
-        list.add(new int[] {-1, -1, 0});
         for (int[] task : tasks)    {
             int start = task[0];
             int end = task[1];
-            int duration = task[2];
             int lo = 0;
-            int hi = list.size() - 1;
+            int hi = arr.size() - 1;
             while (lo <= hi)    {
                 int mid = lo + (hi - lo) / 2;
-                if (list.get(mid)[0] > start)
+                if (arr.get(mid)[0] >= start)
                     hi = mid - 1;
                 else
                     lo = mid + 1;
             }
             
-            int idx = hi;
             int overlap = 0;
-            if (list.get(idx)[1] >= start)
-                overlap += Math.min(end, list.get(idx)[1]) - start + 1;
+            if (!arr.isEmpty())
+                overlap += arr.get(arr.size() - 1)[2] - (hi >= 0 ? arr.get(hi)[2] : 0);
+            if (hi >= 0 && arr.get(hi)[1] >= start)
+                overlap += arr.get(hi)[1] - start + 1;
             
-            overlap += list.get(list.size() - 1)[2] - list.get(idx)[2];
-            
-            if (overlap < duration) {
-                int newEnd = end;
-                int newTotal = duration - overlap;
-                int newStart = newEnd - newTotal + 1;
-                int preTotal = list.get(list.size() - 1)[2];
-                newTotal += preTotal;
-                while (!list.isEmpty() && list.get(list.size() - 1)[1] >= newStart - 1)  {
-                    int preStart = list.get(list.size() - 1)[0];
-                    int preEnd = list.get(list.size() - 1)[1];
-                    int gap = preEnd + 1 - newStart;
-                    newStart = preStart - gap;
-                    list.remove(list.size() - 1);
+            int duration = task[2] - overlap;
+            if (duration <= 0)
+                continue;
+            int totalDuration = duration + (arr.isEmpty() ? 0 : arr.get(arr.size() - 1)[2]);
+            int curEnd = end;
+            int curStart = end;
+            while (!arr.isEmpty() && duration > 0)  {
+                int consume = Math.min(curEnd - arr.get(arr.size() - 1)[1], duration);
+                duration -= consume;
+                if (consume < curEnd - arr.get(arr.size() - 1)[1])  {
+                    curStart = curEnd - consume + 1;
+                    break;
                 }
-                list.add(new int[] {newStart, newEnd, newTotal});
+                curStart = arr.get(arr.size() - 1)[0];
+                curEnd = curStart - 1;
+                arr.remove(arr.size() - 1);
             }
+            if (duration > 0)
+                curStart = curStart - duration;
+            arr.add(new int[] {curStart, end, totalDuration});
         }
         
-        return list.get(list.size() - 1)[2];
+        
+        return arr.isEmpty() ? 0 : arr.get(arr.size() - 1)[2];
     }
 }
-
