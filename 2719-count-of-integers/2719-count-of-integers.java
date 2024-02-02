@@ -1,48 +1,43 @@
 class Solution {
-    int MOD = 1000000007;
+    long MOD = (int)1e9 + 7;
     public int count(String num1, String num2, int min_sum, int max_sum) {
-        int num1Len = num1.length();
-        int num2Len = num2.length();
-        long a =  (dfs(new Long[num2Len + 1][max_sum + 1], num2, num2Len, 0, max_sum, false, true) + MOD - dfs(new Long[num2Len][min_sum + 1], num2, num2Len, 0, min_sum - 1, false, true)) % MOD;
-        long b = (dfs(new Long[num1Len + 1][max_sum + 1], num1, num1Len, 0, max_sum, false, true) + MOD - dfs(new Long[num1Len + 1][min_sum + 1], num1, num1Len, 0, min_sum - 1, false, true)) % MOD;
-        long ret = (a + MOD - b) % MOD;
-        if (getDigitSum(num1) >= min_sum && getDigitSum(num1) <= max_sum)
-            ret = (ret + 1) % MOD;
-        return (int)(ret % MOD);
+        long a = dfs(new Long[24][401][2][2], getNum(num2), min_sum, max_sum, 0, 0, false, true);
+        long b = dfs(new Long[24][401][2][2], getNum(num1), min_sum, max_sum, 0, 0, false, true);
+        int sum = 0;
+        for (char c : num1.toCharArray())
+            sum += c - '0';
+        long c = sum >= min_sum && sum <= max_sum ? 1 : 0;
+        return (int)((MOD + a - b + c) % MOD);
     }
     
-    int getDigitSum(String s)   {
-        int ret = 0;
-        for (char c : s.toCharArray())  {
-            ret += c - '0';
-        }
-        return ret;
-    }
-    
-    long dfs(Long[][] dp, String digits, int len, int idx, int left, boolean isNum, boolean isLimit)  {
-        if (idx >= len)
-            return isNum? 1 : 0;
-        
-        if (isNum && !isLimit && dp[idx][left] != null)
-            return dp[idx][left];
+    long dfs(Long[][][][] mem, int[] nums, int minSum, int maxSum, int sum, int idx, boolean isNum, boolean isLimit)  {
+        if (idx >= nums.length)
+            return sum >= minSum && sum <= maxSum ? 1 : 0;
+        if (mem[idx][sum][isNum ? 1 : 0][isLimit ? 1 : 0] != null)
+            return mem[idx][sum][isNum ? 1 : 0][isLimit ? 1 : 0];
         
         long ans = 0;
         
-        if (!isNum) {
-            ans = (ans + dfs(dp, digits, len, idx + 1, left, false , false)) % MOD;
-        }
+        if (!isNum)
+            ans = (ans + dfs(mem, nums, minSum, maxSum, sum, idx + 1, false, false)) % MOD;
         
         int lo = isNum ? 0 : 1;
-        int hi = isLimit ? digits.charAt(idx) - '0' : 9;
+        int hi = isLimit ? nums[idx] : 9;
         
         for (int i = lo; i <= hi; i++)  {
-            if (i <= left)
-                ans = (ans + dfs(dp, digits, len, idx + 1, left - i, true, isLimit && i == digits.charAt(idx) - '0')) % MOD;
+            if (sum + i > maxSum)
+                continue;
+            ans = (ans + dfs(mem, nums, minSum, maxSum, sum + i, idx + 1, true, isLimit && i == nums[idx])) % MOD;
         }
         
-        if (isNum && !isLimit)
-            dp[idx][left] = ans;
-        
+        mem[idx][sum][isNum ? 1 : 0][isLimit ? 1 : 0] = ans;
         return ans;
+    }
+    
+    int[] getNum(String num)    {
+        int[] nums = new int[num.length()];
+        for (int i = 0; i < num.length(); i++)
+            nums[i] = num.charAt(i) - '0';
+        return nums;
     }
 }
