@@ -28,18 +28,18 @@ class Solution {
         
         long ans = 0;
         if (!isNum) {
-            ans = (ans + dfs(mem, num, idx + 1, 0, false, false) % MOD) % MOD;
+            ans = (ans + dfs(mem, num, idx + 1, 0, false, false)) % MOD;
             int hi = isLimit ? num[idx] : 9;
             for (int i = 1; i <= hi; i++)    {
-                ans = (ans + dfs(mem, num, idx + 1, i, true, isLimit && i == num[idx]) % MOD) % MOD;
+                ans = (ans + dfs(mem, num, idx + 1, i, true, isLimit && i == num[idx])) % MOD;
             }
         }
         else    {
             if (lastDigit - 1 >= 0 && (!isLimit || isLimit && lastDigit - 1 <= num[idx]))
-                ans = (ans + dfs(mem, num, idx + 1, lastDigit - 1, true, isLimit && lastDigit - 1 == num[idx]) % MOD) % MOD;
+                ans = (ans + dfs(mem, num, idx + 1, lastDigit - 1, true, isLimit && lastDigit - 1 == num[idx])) % MOD;
         
             if (lastDigit + 1 <= 9 && (!isLimit || isLimit && lastDigit + 1 <= num[idx]))
-                ans = (ans + dfs(mem, num, idx + 1, lastDigit + 1, true, isLimit && lastDigit + 1 == num[idx]) % MOD) % MOD;
+                ans = (ans + dfs(mem, num, idx + 1, lastDigit + 1, true, isLimit && lastDigit + 1 == num[idx])) % MOD;
         }
         mem[idx][lastDigit][isNum ? 1 : 0][isLimit ? 1 : 0] = ans;
         return ans;
