@@ -1,60 +1,47 @@
 class Solution {
-    int len;
-    Long[][] dp;
-    int[] digits;
     int MOD = (int)1e9 + 7;
     public int countSteppingNumbers(String low, String high) {
-        len = low.length();
-        dp = new Long[len][10];
-        digits = strToDigitArray(low);
-        long lo = dfs(0, -1, false, true);
-        len = high.length();
-        dp = new Long[len][10];
-        digits = strToDigitArray(high);
-        long hi = dfs(0, -1, false, true);
-        return (int)((hi + MOD - lo + (isStepping(low) ? 1 : 0)) % MOD);
+        int[] lowArr = new int[low.length()];
+        for (int i = 0; i < low.length(); i++)
+            lowArr[i] = low.charAt(i) - '0';
+        int[] highArr = new int[high.length()];
+        for (int i = 0; i < high.length(); i++)
+            highArr[i] = high.charAt(i) - '0';
+        long a = dfs(new Long[highArr.length][11][2][2], highArr, 0, 0, false, true);
+        long b = dfs(new Long[lowArr.length][11][2][2], lowArr, 0, 0, false, true);
+        return (int)((MOD + a - b + (check(low) ? 1 : 0)) % MOD);
     }
     
-    boolean isStepping(String num)  {
-        for (int i = 1; i < num.length(); i++)  {
-            if (Math.abs(num.charAt(i) - num.charAt(i - 1)) != 1)
+    boolean check(String s) {
+        for (int i = 1; i < s.length(); i++)    {
+            if (Math.abs(s.charAt(i) - s.charAt(i - 1)) != 1)
                 return false;
         }
         return true;
     }
     
-    int[] strToDigitArray(String low)   {
-        int[] num = new int[low.length()];
-        for (int i = 0; i < low.length(); i++)  {
-            num[i] = low.charAt(i) - '0';
-        }
-        return num;
-    }
-    
-    long dfs(int idx, int lastDigit, boolean isNum, boolean isLimit)   {
-        if (idx >= len) {
+    long dfs(Long[][][][] mem, int[] num, int idx, int lastDigit, boolean isNum, boolean isLimit)   {
+        if (idx >= num.length)
             return isNum ? 1 : 0;
-        }
-        if (isNum && !isLimit && dp[idx][lastDigit] != null)
-            return dp[idx][lastDigit];
+        if (mem[idx][lastDigit][isNum ? 1 : 0][isLimit ? 1 : 0] != null)
+            return mem[idx][lastDigit][isNum ? 1 : 0][isLimit ? 1 : 0];
+        
         long ans = 0;
-        
-        if (!isNum) 
-            ans = (ans + dfs(idx + 1, -1, false, false)) % MOD;
-        
-        for (int i = 0; i < 10; i++)    {
-            if (!isNum && i == 0)
-                continue;
-            if (lastDigit != -1 && lastDigit + 1 != i && lastDigit - 1 != i)
-                continue;
-            if (isLimit && i > digits[idx])
-                continue;
-            ans = (ans + dfs(idx + 1, i, true, isLimit && i == digits[idx])) % MOD;
+        if (!isNum) {
+            ans = (ans + dfs(mem, num, idx + 1, 0, false, false) % MOD) % MOD;
+            int hi = isLimit ? num[idx] : 9;
+            for (int i = 1; i <= hi; i++)    {
+                ans = (ans + dfs(mem, num, idx + 1, i, true, isLimit && i == num[idx]) % MOD) % MOD;
+            }
         }
+        else    {
+            if (lastDigit - 1 >= 0 && (!isLimit || isLimit && lastDigit - 1 <= num[idx]))
+                ans = (ans + dfs(mem, num, idx + 1, lastDigit - 1, true, isLimit && lastDigit - 1 == num[idx]) % MOD) % MOD;
         
-        if (isNum && !isLimit)
-            dp[idx][lastDigit] = ans;
-        
-        return ans;        
+            if (lastDigit + 1 <= 9 && (!isLimit || isLimit && lastDigit + 1 <= num[idx]))
+                ans = (ans + dfs(mem, num, idx + 1, lastDigit + 1, true, isLimit && lastDigit + 1 == num[idx]) % MOD) % MOD;
+        }
+        mem[idx][lastDigit][isNum ? 1 : 0][isLimit ? 1 : 0] = ans;
+        return ans;
     }
 }
