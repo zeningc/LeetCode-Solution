@@ -4,8 +4,6 @@ class Solution {
     }
     
     int countDigit(int d, int n)    {
-        if (n < 10 && d == 0)
-            return 1;
         int power = 1;
         int pre = n;
         int next = 0;
@@ -15,7 +13,7 @@ class Solution {
             pre /= 10;
             if (d == 0 && pre == 0)
                 break;
-            ans += (power > 1 && d == 0 ? pre - 1 : pre) * power;
+            ans += (d == 0 ? pre - 1 : pre) * power;
             
             if (r > d)
                 ans += power;
@@ -26,6 +24,6 @@ class Solution {
             power *= 10;
         }
         
-        return ans;
+        return ans + (d == 0 ? 1 : 0);
     }
 }
