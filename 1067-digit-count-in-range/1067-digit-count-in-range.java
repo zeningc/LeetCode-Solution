@@ -8,11 +8,9 @@ class Solution {
         int pre = n;
         int next = 0;
         int ans = 0;
-        while (pre != 0)    {
+        while ((d == 0 && pre / 10 != 0 || d != 0 && pre != 0))    {
             int r = pre % 10;
             pre /= 10;
-            if (d == 0 && pre == 0)
-                break;
             ans += (d == 0 ? pre - 1 : pre) * power;
             
             if (r > d)
