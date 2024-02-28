@@ -1,113 +1,119 @@
 class MKAverage {
-    TreeMap<Integer, Integer> maxMap;
-    TreeMap<Integer, Integer> minMap;
-    TreeMap<Integer, Integer> midMap;
     int m;
     int k;
-    int minMapSize;
-    int maxMapSize;
-    int midMapSize;
-    int midMapSum;
-    Deque<Integer> q;
+    SortedList min;
+    SortedList max;
+    SortedList mid;
+    Queue<Integer> q;
+    int n;
     public MKAverage(int m, int k) {
+        min = new SortedList();
+        mid = new SortedList();
+        max = new SortedList();
         this.m = m;
         this.k = k;
         q = new LinkedList<>();
-        maxMap = new TreeMap<>();
-        minMap = new TreeMap<>();
-        midMap = new TreeMap<>();
-        minMapSize = 0;
-        maxMapSize = 0;
-        midMapSize = 0;
-        midMapSum = 0;
+        n = 0;
     }
     
     public void addElement(int num) {
         q.offer(num);
-        
-        if (minMapSize < k || num <= minMap.lastKey())   {
-            update(minMap, num, 1);
-            if (minMapSize > k) {
-                shift(minMap, midMap, 1);
-                if (maxMapSize < k)
-                    shift(midMap, maxMap, 1);
+        if (min.cnt == k && max.cnt == k)   {
+            if (num > max.peekFirst())  {
+                max.offer(num);
+                mid.offer(max.pollFirst());
+            }
+            else if (num < min.peekLast())  {
+                min.offer(num);
+                mid.offer(min.pollLast());
+            }
+            else    {
+                mid.offer(num);
             }
         }
-        else if (maxMapSize < k || num >= maxMap.firstKey())  {
-            update(maxMap, num, 1);
-            if (maxMapSize > k) {
-                shift(midMap, maxMap, -1);
-            }
+        else if (min.cnt <= max.cnt) {
+            max.offer(num);
+            min.offer(max.pollFirst());
         }
         else    {
-            update(midMap, num, 1);
+            min.offer(num);
+            max.offer(min.pollLast());
         }
+        n++;
         
-        
-        if (q.size() <= m)
+        if (n <= m)
             return;
         
-        int pop = q.poll();
-        if (midMap.containsKey(pop))    {
-            update(midMap, pop, -1);
+        int numToRemove = q.poll();
+        if (numToRemove <= min.peekLast())   {
+            min.decreaseByOne(numToRemove);
+            min.offer(mid.pollFirst());
         }
-        else if (minMap.containsKey(pop))    {
-            update(minMap, pop, -1);
-            shift(minMap, midMap, -1);
+        else if (numToRemove >= max.peekFirst()) {
+            max.decreaseByOne(numToRemove);
+            max.offer(mid.pollLast());
         }
-        else if (maxMap.containsKey(pop))   {
-            update(maxMap, pop, -1);
-            shift(midMap, maxMap, 1);
+        else    {
+            mid.decreaseByOne(numToRemove);
         }
-        
     }
     
     public int calculateMKAverage() {
-        if (q.size() < m)
+        if (n < m)
             return -1;
-        return midMapSum / (m - 2 * k);
+        return mid.sum / mid.cnt;
     }
     
-    /*
-    update treemap m, let m[key] += delta
-    */
-    private void update(TreeMap<Integer, Integer> m, int num, int delta) {
-        int cnt = m.getOrDefault(num, 0) + delta;
-        if (cnt == 0)
-            m.remove(num);
+    
+}
+
+class SortedList {
+    TreeMap<Integer, Integer> map;
+    int sum;
+    int cnt;
+    
+    public SortedList() {
+        map = new TreeMap<>();
+        sum = 0;
+        cnt = 0;
+    }
+    
+    public int pollFirst() {
+        return decreaseByOne(peekFirst());
+    }
+    
+    public int pollLast() {
+        return decreaseByOne(peekLast());
+    }
+    
+    public int decreaseByOne(int key)  {
+        int freq = map.get(key);
+        freq--;
+        if (freq == 0)
+            map.remove(key);
         else
-            m.put(num, cnt);
-        
-        if (m == maxMap)    {
-            maxMapSize += delta;
-        }
-        else if (m == minMap)   {
-            minMapSize += delta;
-        }
-        else if (m == midMap)   {
-            midMapSize += delta;
-            midMapSum += delta * num;
-        }
+            map.put(key, freq);
+        cnt--;
+        sum -= key;
+        return key;
     }
     
-    /*
-    shift element from one treemap to another
-    a.lastKey() <= b.firstKey()
-    if delta == 1: shift from a to b
-    if delta == -1: shift from b to a
-    */
-    private void shift(TreeMap<Integer, Integer> a, TreeMap<Integer, Integer> b, int delta) {
-        if (delta == 1) {
-            int num = a.lastKey();
-            update(a, num, -1);
-            update(b, num, 1);
-            return;
-        }
-        int num = b.firstKey();
-        update(a, num, 1);
-        update(b, num, -1);
+    public void offer(int key) {
+        map.put(key, map.getOrDefault(key, 0) + 1);
+        sum += key;
+        cnt++;
+        
+    }
+    
+    public int peekFirst()  {
+        return map.firstKey();
+    }
+    
+    public int peekLast()  {
+        return map.lastKey();
     }
 }
+
 /**
  * Your MKAverage object will be instantiated and called as such:
  * MKAverage obj = new MKAverage(m, k);
