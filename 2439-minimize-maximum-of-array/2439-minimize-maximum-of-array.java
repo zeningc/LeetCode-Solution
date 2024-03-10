@@ -1,26 +1,14 @@
 class Solution {
     public int minimizeArrayValue(int[] nums) {
-        int lo = 0;
-        int hi = Integer.MAX_VALUE;
-        while (lo <= hi)    {
-            int m = lo + (hi - lo) / 2;
-            if (check(nums, m))
-                hi = m - 1;
-            else
-                lo = m + 1;
+        long ans = 0;
+        long sum = 0;
+        int cnt = 0;
+        for (int num : nums)    {
+            cnt++;
+            sum += num;
+            ans = Math.max(ans, (int)Math.ceil((double)sum / cnt));
         }
         
-        return lo;
-    }
-    
-    boolean check(int[] nums, int m)    {
-        long idle = 0;
-        for (int i = nums.length - 1; i >= 0; i--)
-            if (nums[i] > m)
-                idle += nums[i] - m;
-            else
-                idle -= Math.min(idle, m - nums[i]);
-        
-        return idle == 0;
+        return (int)ans;
     }
 }
