@@ -16,7 +16,7 @@ class Solution {
         return lo == changeIndices.length + 1 ? -1 : lo;
     }
     
-    boolean check(int[] nums, int[] changeIndices, int s) {
+    boolean check(int[] nums, int[] changeIndices, long s) {
         int n = nums.length;
         int[] first = new int[n];
         Arrays.fill(first, -1);
@@ -24,7 +24,7 @@ class Solution {
             if (first[changeIndices[i]] == -1 && nums[changeIndices[i]] != 0)
                 first[changeIndices[i]] = i;
         TreeSet<int[]> ts = new TreeSet<>((a, b) -> a[1] != b[1] ? a[1] - b[1] : a[0] - b[0]);
-        for (int t = s - 1; t >= 0; t--)    {
+        for (int t = (int)s - 1; t >= 0; t--)    {
             int cur = changeIndices[t];
             if (first[cur] != t)
                 continue;
@@ -33,6 +33,16 @@ class Solution {
             if (s - t - ts.size() < ts.size())  
                 ts.remove(ts.first());
         }
-        return ts.stream().mapToLong(a->(int)a[1]).sum() + s - n - ts.size() >= Arrays.stream(nums).mapToLong(i -> (long)i).sum();
+        boolean[] marked = new boolean[n];
+        for (int[] e : ts)  {
+            marked[e[0]] = true;
+            s -= 2;
+        }
+        
+        for (int i = 0; i < n; i++)
+            if (!marked[i])
+                s -= (long)nums[i] + 1;
+        
+        return s >= 0;
     }
 }
