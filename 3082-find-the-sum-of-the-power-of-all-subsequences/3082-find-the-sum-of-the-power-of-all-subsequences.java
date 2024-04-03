@@ -6,8 +6,8 @@ class Solution {
         long power = 1;
         int mod = (int)1e9 + 7;
         for (int i = 1; i <= n; i++) {
-            for (int v = k; v >= nums[i - 1]; v--) {
-                  for (int j = 1; j <= n; j++) {
+            for (int j = n; j >= 1; j--) {
+                  for (int v = k; v >= nums[i - 1]; v--) {
                     dp[j][v] = (dp[j][v] + dp[j - 1][v - nums[i - 1]]) % mod;
                 }
             }
