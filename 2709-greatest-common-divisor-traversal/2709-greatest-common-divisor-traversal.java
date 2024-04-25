@@ -2,7 +2,7 @@ class Solution {
     public boolean canTraverseAllPairs(int[] nums) {
         int n = nums.length;
         int maxVal = Arrays.stream(nums).boxed().max(Integer::compare).get();
-        
+
         UnionFind uf = new UnionFind(maxVal);
         for (int i = 0; i < n; i++) {
             int num = nums[i];
