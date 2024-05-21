@@ -14,11 +14,29 @@ class Solution {
         int right = 0;
         double gap = Double.MAX_VALUE;
         for (int i = 0; i < arr.length; i++)    {
-            for (int j = i + 1; j < arr.length; j++)    {
-                if (Math.abs((double)arr[i] / arr[j] - lo) < gap)   {
+            int l = i + 1;
+            int r = arr.length - 1;
+            while (l <= r)    {
+                int m = l + (r - l) / 2;
+                if ((double)arr[i] / arr[m] <= lo)
+                    r = m - 1;
+                else
+                    l = m + 1;
+            }
+            
+            if (l != arr.length)   {
+                if (Math.abs((double)arr[i] / arr[l] - lo) < gap)   {
                     left = arr[i];
-                    right = arr[j];
-                    gap = Math.abs((double)arr[i] / arr[j] - lo);
+                    right = arr[l];
+                    gap = Math.abs((double)arr[i] / arr[l] - lo);
+                }
+            }
+            
+            if (r != -1)    {
+                if (Math.abs((double)arr[i] / arr[r] - lo) < gap)   {
+                    left = arr[i];
+                    right = arr[r];
+                    gap = Math.abs((double)arr[i] / arr[r] - lo);
                 }
             }
         }
@@ -30,12 +48,18 @@ class Solution {
         int cnt = 0;
         
         for (int i = 0; i < arr.length; i++)    {
-            for (int j = i + 1; j < arr.length; j++)    {
-                if ((double)arr[i] / arr[j] <= target)  {
-                    cnt += arr.length - j;
-                    break;
-                }
+            int lo = i + 1;
+            int hi = arr.length - 1;
+            while (lo <= hi)    {
+                int mid = lo + (hi - lo) / 2;
+                if ((double)arr[i] / arr[mid] <= target)
+                    hi = mid - 1;
+                else
+                    lo = mid + 1;
             }
+            
+            if (lo != arr.length)
+                cnt += arr.length - lo;
         }
         
         return cnt >= k;
