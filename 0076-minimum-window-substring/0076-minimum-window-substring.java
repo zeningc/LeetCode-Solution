@@ -10,12 +10,17 @@ class Solution {
         int len = Integer.MAX_VALUE;
         int start = -1;
         int end = -1;
+        int formed = 0;
+        int need = tMap.size();
         for (int hi = 0; hi < n; hi++)  {
             char c = s.charAt(hi);
             if (!tMap.containsKey(c))
                 continue;
             map.put(c, map.getOrDefault(c, 0) + 1);
-            while (map.size() == tMap.size())    {
+            if (map.get(c).equals(tMap.get(c)))  {
+                formed++;
+            }
+            while (formed == need)    {
                 char p = s.charAt(lo);
                 if (!tMap.containsKey(p))   {
                     lo++;
@@ -29,22 +34,12 @@ class Solution {
                 break;
             }
             
-            if (map.size() == tMap.size() && hi - lo + 1 < len)   {
-                boolean valid = true;
-                for (char key : tMap.keySet())   {
-                    if (map.get(key) < tMap.get(key))   {
-                        valid = false;
-                        break;
-                    }
-                }
-                if (!valid)
-                    continue;
+            if (formed == need && hi - lo + 1 < len)   {
                 len = hi - lo + 1;
                 start = lo;
                 end = hi + 1;
             }
         }
-        
         return len == Integer.MAX_VALUE ? "" : s.substring(start, end);
     }
 }
