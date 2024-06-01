@@ -1,21 +1,23 @@
 class Solution {
     public long countGood(int[] nums, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        int cnt = 0;
-        int lo = 0;
         long ans = 0;
-        int n = nums.length;
-        for (int hi = 0; hi < n; hi++)  {
-            int curFreq = freq.getOrDefault(nums[hi], 0);
-            cnt -= curFreq * (curFreq - 1) / 2;
-            freq.put(nums[hi], curFreq + 1);
-            cnt += curFreq * (curFreq + 1) / 2;
+        Map<Integer, Integer> freq = new HashMap<>();
+        int lo = 0;
+        long pair = 0;
+        for (int hi = 0; hi < nums.length; hi++)    {
+            int oldFreq = freq.getOrDefault(nums[hi], 0);
+            pair -= (long)oldFreq * (oldFreq - 1) / 2;
+            pair += (long)(oldFreq + 1) * oldFreq / 2;
+            freq.put(nums[hi], oldFreq + 1);
             
-            while (cnt >= k) {
-                curFreq = freq.get(nums[lo]);
-                cnt -= curFreq * (curFreq - 1) / 2;
-                cnt += (curFreq - 1) * (curFreq - 2) / 2;
-                freq.put(nums[lo], curFreq - 1);
+            while (pair >= k)   {
+                oldFreq = freq.get(nums[lo]);
+                pair -= (long)oldFreq * (oldFreq - 1) / 2;
+                pair += (long)(oldFreq - 1) * (oldFreq - 2) / 2;
+                if (oldFreq - 1 == 0)
+                    freq.remove(nums[lo]);
+                else
+                    freq.put(nums[lo], oldFreq - 1);
                 lo++;
             }
             
@@ -25,3 +27,10 @@ class Solution {
         return ans;
     }
 }
+
+/*
+1 in a subarray, how to calculate the number of "good" pair?
+nums[i] == nums[j] == nums[k] => (i, j) (i, k), (j, k) => 3
+n * (n + 1) / 2 => n: number of same element in the array
+2. [lo, hi] is not good but [0.. lo - 1, hi] is good
+*/
