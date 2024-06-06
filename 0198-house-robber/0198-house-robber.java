@@ -1,13 +1,13 @@
 class Solution {
     public int rob(int[] nums) {
         int n = nums.length;
-        int[] dp = new int[n];
-        int max = 0;
-        dp[0] = nums[0];
+        int pre = 0;
+        int cur = nums[0];
         for (int i = 1; i < n; i++) {
-            dp[i] = max + nums[i];
-            max = Math.max(max, dp[i - 1]);
+            int nxt = pre + nums[i];
+            pre = Math.max(pre, cur);
+            cur = nxt;
         }
-        return Math.max(dp[n - 1], max);
+        return Math.max(cur, pre);
     }
 }
