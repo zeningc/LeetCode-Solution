@@ -32,7 +32,7 @@ class Solution {
             right = dfs(root.right);
         
         int notSteal = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
-        int steal = root.val + left[1] + right[1];
+        int steal = Math.max(notSteal, root.val + left[1] + right[1]);
         return new int[] {steal, notSteal};
     }
 }
