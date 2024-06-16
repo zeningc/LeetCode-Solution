@@ -1,42 +1,50 @@
 class MajorityChecker {
     Map<Integer, List<Integer>> m;
-    List<Integer> freqRank;
+    List<Integer> rank;
     public MajorityChecker(int[] arr) {
         m = new HashMap<>();
-        freqRank = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++)    {
+        rank = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++)
             m.computeIfAbsent(arr[i], x -> new ArrayList<>()).add(i);
-        }
-        for (int key : m.keySet())    {
-            freqRank.add(key);
-        }
-        
-        Collections.sort(freqRank, (a, b) -> m.get(b).size() - m.get(a).size());
+        for (int a : m.keySet())
+            rank.add(a);
+        Collections.sort(rank, (a, b) -> m.get(b).size() - m.get(a).size());
     }
     
     public int query(int left, int right, int threshold) {
         int cnt = right - left + 1;
-        int idx = 0;
-        int ans = -1;
-        while (idx < freqRank.size() && cnt >= threshold)    {
-            int candidate = freqRank.get(idx++);
-            int leftPos = findLeft(m.get(candidate), left);
-            int rightPos = findRight(m.get(candidate), right);
-            int freq = rightPos - leftPos - 1;
-            if (freq >= threshold)
-                return candidate;
-            cnt -= freq;
+        for (int i = 0; i < rank.size() && cnt >= threshold; i++)   {
+            int elem = rank.get(i);
+            int leftPos = findLeft(m.get(elem), left);
+            int rightPos = findRight(m.get(elem), right);
+            if (rightPos - leftPos + 1 >= threshold)
+                return elem;
+            cnt -= rightPos - leftPos + 1;
         }
         
-        return ans;
+        return -1;
     }
     
-    int findLeft(List<Integer> arr, int insert) {
+    int findLeft(List<Integer> list, int pos)   {
         int lo = 0;
-        int hi = arr.size() - 1;
+        int hi = list.size() - 1;
         while (lo <= hi)    {
             int mid = lo + (hi - lo) / 2;
-            if (arr.get(mid) >= insert)
+            if (list.get(mid) >= pos)
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        }
+        
+        return lo;
+    }
+    
+    int findRight(List<Integer> list, int pos)   {
+        int lo = 0;
+        int hi = list.size() - 1;
+        while (lo <= hi)    {
+            int mid = lo + (hi - lo) / 2;
+            if (list.get(mid) > pos)
                 hi = mid - 1;
             else
                 lo = mid + 1;
@@ -45,19 +53,7 @@ class MajorityChecker {
         return hi;
     }
     
-    int findRight(List<Integer> arr, int insert) {
-        int lo = 0;
-        int hi = arr.size() - 1;
-        while (lo <= hi)    {
-            int mid = lo + (hi - lo) / 2;
-            if (arr.get(mid) > insert)
-                hi = mid - 1;
-            else
-                lo = mid + 1;
-        }
-        
-        return lo;
-    }
+    
 }
 
 /**
