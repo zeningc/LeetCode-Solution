@@ -35,85 +35,98 @@ class Solution {
 
 
 class SegmentTree   {
-    Node root;
-    
+    TreeNode root;
+
     public SegmentTree(int lo, int hi, int val)  {
         root = buildTree(lo, hi, val);
     }
-    
-    private Node buildTree(int lo, int hi, int val)  {
+
+    private TreeNode buildTree(int lo, int hi, int val)  {
         if (lo == hi)
-            return new Node(lo, hi, val);
-        int mid = getMid(lo, hi);
-        return new Node(lo, hi, val, buildTree(lo, mid, val), buildTree(mid + 1, hi, val));
+            return new TreeNode(lo, hi, val);
+        int mid = lo + (hi - lo) / 2;
+        return new TreeNode(lo, hi, val, buildTree(lo, mid, val), buildTree(mid + 1, hi, val));
     }
-    
-    private int getMid(int lo, int hi)  {
-        return lo + (hi - lo) / 2;
-    }
-    
-    private void update(Node node, int lo, int hi, int val) {
+
+    private void update(TreeNode node, int lo, int hi, int val) {
         if (node.lo == node.hi && node.hi == hi)   {
             node.val = Math.max(node.val, val);
+            node.lazyTag = Math.max(node.lazyTag, val);
+            node.needUpdate = true;
             return;
         }
-        
-        int mid = getMid(node.lo, node.hi);
-        
-        if (hi <= mid)  {
-            update(node.left, lo, hi, val);
-        }
-        else if (lo > mid)  {
-            update(node.right, lo, hi, val);
-        }
-        else    {
-            update(node.left, lo, mid, val);
-            update(node.right, mid + 1, hi, val);
-        }
-        
+
+        lazyUpdate(node);
+
+        int mid = node.lo + (node.hi - node.lo) / 2;
+
+        if (lo <= mid)
+            update(node.left, lo, Math.min(hi, mid), val);
+        if (hi > mid)
+            update(node.right, Math.max(lo, mid + 1), hi, val);
+
         node.val = Math.max(node.left.val, node.right.val);
     }
-    
+
     public void update(int lo, int hi, int val)   {
         update(root, lo, hi, val);
     }
-    
-    private int query(Node node, int lo, int hi)   {
+
+    public void update(int idx, int val)    {
+        update(idx, idx, val);
+    }
+
+    private int query(TreeNode node, int lo, int hi)   {
         if (lo == node.lo && hi == node.hi)
             return node.val;
-        
-        int mid = getMid(node.lo, node.hi);
-        if (hi <= mid)
-            return query(node.left, lo, hi);
-        else if (lo > mid)
-            return query(node.right, lo, hi);
-        
-        return Math.max(query(node.left, lo, mid), query(node.right, mid + 1, hi));
+        lazyUpdate(node);
+        int mid = node.lo + (node.hi - node.lo) / 2;
+        int ret = 0;
+        if (lo <= mid)
+            ret = Math.max(ret, query(node.left, lo, Math.min(hi, mid)));
+        if (hi > mid)
+            ret = Math.max(ret, query(node.right, Math.max(lo, mid + 1), hi));
+        return ret;
     }
-    
+
     public int query(int lo, int hi)    {
         return query(root, lo, hi);
     }
-    
-    public int query(int idx)    {
-        return query(root, idx, idx);
+
+    public int query(int i)    {
+        return query(i, i);
+    }
+
+    private void lazyUpdate(TreeNode node)  {
+        if (node.needUpdate)    {
+            node.left.val = Math.max(node.lazyTag, node.left.val);
+            node.right.val = Math.max(node.lazyTag, node.right.val);
+            node.left.lazyTag = node.left.needUpdate ? Math.max(node.left.lazyTag, node.lazyTag) : node.lazyTag;
+            node.right.lazyTag = node.right.needUpdate ? Math.max(node.right.lazyTag, node.lazyTag) : node.lazyTag;
+            node.left.needUpdate = true;
+            node.right.needUpdate = true;
+            node.lazyTag = 0;
+            node.needUpdate = false;
+        }
     }
 }
 
-class Node  {
+class TreeNode  {
     int val;
     int lo;
     int hi;
-    Node left;
-    Node right;
-    
-    public Node(int lo, int hi, int val)    {
+    TreeNode left;
+    TreeNode right;
+    int lazyTag;
+    boolean needUpdate;
+
+    public TreeNode(int lo, int hi, int val)    {
         this.lo = lo;
         this.hi = hi;
         this.val = val;
     }
-    
-    public Node(int lo, int hi, int val, Node left, Node right) {
+
+    public TreeNode(int lo, int hi, int val, TreeNode left, TreeNode right) {
         this(lo, hi, val);
         this.left = left;
         this.right = right;
