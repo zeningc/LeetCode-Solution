@@ -70,6 +70,7 @@ class SegmentTree   {
         if (node.lo == node.hi && node.hi == hi)   {
             node.val = (node.hi - node.lo + 1) * val;
             node.lazyTag = val;
+            node.needUpdate = true;
             return;
         }
         
@@ -110,8 +111,8 @@ class SegmentTree   {
         if (node.needUpdate)    {
             node.left.val = (node.left.hi - node.left.lo + 1) * node.lazyTag;
             node.right.val = (node.right.hi - node.right.lo + 1) * node.lazyTag;
-            node.left.lazyTag += node.lazyTag;
-            node.right.lazyTag += node.lazyTag;
+            node.left.lazyTag = node.lazyTag;
+            node.right.lazyTag = node.lazyTag;
             node.lazyTag = 0;
             node.needUpdate = false;
         }
