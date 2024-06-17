@@ -52,7 +52,7 @@ class SegmentTree   {
         if (node.lo == node.hi && node.hi == hi)   {
             node.val = Math.max(node.val, val);
             node.lazyTag = Math.max(node.lazyTag, val);
-            node.needUpdate = true;
+            // node.needUpdate = true;
             return;
         }
 
