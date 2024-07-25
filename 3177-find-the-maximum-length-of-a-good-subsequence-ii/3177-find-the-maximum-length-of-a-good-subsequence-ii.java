@@ -9,9 +9,9 @@ class Solution {
             pre[i][2] = -1;
             pre[i][3] = 0;
         }
-        
+        Map<Integer, Integer> maxMap = new HashMap<>();
         for (int x = 0; x <= k; x++)    {
-            Map<Integer, Integer> maxMap = new HashMap<>();
+            maxMap.clear();
             int[][] nxt = new int[n + 1][4];
             nxt[0][0] = -1;
             nxt[0][1] = 0;
