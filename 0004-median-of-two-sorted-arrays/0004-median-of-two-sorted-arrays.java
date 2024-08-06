@@ -14,8 +14,6 @@ class Solution {
         int consume = Math.min(k / 2, Math.min(nums1.length - start1, nums2.length - start2));
         if (nums1[start1 + consume - 1] < nums2[start2 + consume - 1])
             return findKthSmallest(nums1, nums2, start1 + consume, start2, k - consume);
-        if (nums1[start1 + consume - 1] > nums2[start2 + consume - 1])
-            return findKthSmallest(nums1, nums2, start1, start2 + consume, k - consume);
-        return findKthSmallest(nums1, nums2, start1 + consume, start2, k - consume);
+        return findKthSmallest(nums1, nums2, start1, start2 + consume, k - consume);
     }
 }
