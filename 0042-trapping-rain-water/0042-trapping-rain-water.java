@@ -1,25 +1,14 @@
 class Solution {
     public int trap(int[] height) {
-        int hi = height.length - 1;
-        int lo = 0;
-        int loMax = 0;
-        int hiMax = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
         int ans = 0;
-        while (lo < hi) {
-            if (height[lo] < height[hi])    {
-                if (height[lo] > loMax)
-                    loMax = height[lo];
-                else
-                    ans += loMax - height[lo];
-                lo++;
+        for (int i = 0; i < height.length; i++) {
+            while (!stack.isEmpty() && height[stack.peek()] <= height[i])    {
+                int prevIdx = stack.pop();
+                if (!stack.isEmpty())
+                    ans += (Math.min(height[stack.peek()], height[i]) - height[prevIdx]) * (i - stack.peek() - 1);
             }
-            else    {
-                if (height[hi] > hiMax)
-                    hiMax = height[hi];
-                else
-                    ans += hiMax - height[hi];
-                hi--;
-            }
+            stack.push(i);
         }
         
         return ans;
