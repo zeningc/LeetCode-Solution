@@ -1,39 +1,71 @@
 class Solution {
     public String[] shortestSubstrings(String[] arr) {
-        Map<Integer, Set<String>> m = new HashMap<>();
-        Map<String, Integer> freq = new HashMap<>();
-        for (int i = 0; i < arr.length; i++)    {
-            String a = arr[i];
-            Set<String> set = new HashSet<>();
-            for (int j = 0; j < a.length(); j++)    {
-                for (int k = j; k < a.length(); k++)    {
-                    set.add(a.substring(j, k + 1));
-                }
-            }
-            for (String s : set)
-                freq.put(s, freq.getOrDefault(s, 0) + 1);
-            m.put(i, set);
-        }
+        Trie root = new Trie('#');
         String[] ans = new String[arr.length];
-        
-        for (int i = 0; i < arr.length; i++)    {
-            Set<String> set = m.get(i);
-            String cur = null;
-            for (String s : set)    {
-                if (freq.get(s) != 1)
-                    continue;
-                if (cur == null)    {
-                    cur = s;
-                    continue;
+        for (String a : arr)    {
+            for (int i = 0; i < a.length(); i++)    {
+                Trie node = root;
+                for (int j = i; j < a.length(); j++)    {
+                    if (node.children[a.charAt(j) - 'a'] == null)
+                        node.children[a.charAt(j) - 'a'] = new Trie(a.charAt(j));
+                    node = node.children[a.charAt(j) - 'a'];
+                    node.cnt++;
                 }
-                if (s.length() > cur.length())
-                    continue;
-                if (s.length() == cur.length() && s.compareTo(cur) <= 0 || s.length() < cur.length())
-                    cur = s;
             }
-            ans[i] = cur == null ? "" : cur;
+        }
+        
+        for (int k = 0; k < arr.length; k++)    {
+            String a = arr[k];
+            for (int i = 0; i < a.length(); i++)    {
+                Trie node = root;
+                for (int j = i; j < a.length(); j++)    {
+                    node = node.children[a.charAt(j) - 'a'];
+                    node.cnt--;
+                }
+            }
+            
+            String curAns = null;
+            
+            for (int i = 0; i < a.length(); i++)    {
+                Trie node = root;
+                for (int j = i; j < a.length(); j++)    {
+                    if (node.children[a.charAt(j) - 'a'] == null || node.children[a.charAt(j) - 'a'].cnt == 0)  {
+                        String sub = a.substring(i, j + 1);
+                        if (curAns == null || curAns.length() > (j - i + 1) || curAns.length() == (j - i + 1) && curAns.compareTo(sub) > 0)   {
+                            curAns = sub;
+                        }
+                        break;
+                    }
+                    node = node.children[a.charAt(j) - 'a'];
+                }
+            }
+            
+            
+            for (int i = 0; i < a.length(); i++)    {
+                Trie node = root;
+                for (int j = i; j < a.length(); j++)    {
+                    if (node.children[a.charAt(j) - 'a'] == null)
+                        node.children[a.charAt(j) - 'a'] = new Trie(a.charAt(j));
+                    node = node.children[a.charAt(j) - 'a'];
+                    node.cnt++;
+                }
+            }
+            
+            ans[k] = curAns == null ? "" : curAns;
         }
         
         return ans;
+    }
+}
+
+class Trie  {
+    char c;
+    Trie[] children;
+    int cnt;
+    
+    public Trie(char c) {
+        this.c = c;
+        children = new Trie[26];
+        cnt = 0;
     }
 }
