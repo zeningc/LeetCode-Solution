@@ -1,47 +1,48 @@
 class Solution {
-    Map<Integer, List<int[]>> graph;
+    Map<Integer, List<Integer>> graph;
+    Map<Integer, Set<Integer>> orderGraph;
     int[] ans;
+    int n;
     public int[] minEdgeReversals(int n, int[][] edges) {
         graph = new HashMap<>();
+        orderGraph = new HashMap<>();
+        this.n = n;
         ans = new int[n];
-        for (int[] edge : edges)
-        {
-            int u = edge[0];
-            int v = edge[1];
-            graph.computeIfAbsent(u, a -> new LinkedList<int[]>()).add(new int[] {v, 1});
-            graph.computeIfAbsent(v, a -> new LinkedList<int[]>()).add(new int[] {u, -1});
+        for (int[] edge : edges)    {
+            graph.computeIfAbsent(edge[0], x -> new ArrayList<>()).add(edge[1]);
+            graph.computeIfAbsent(edge[1], x -> new ArrayList<>()).add(edge[0]);
+            orderGraph.computeIfAbsent(edge[0], x -> new HashSet<>()).add(edge[1]);
         }
         
-        int cnt = dfs1(0, -1);
-        dfs2(0, -1, cnt);
+        int cnt = dfs(0, -1);
+        dfs1(0, -1, cnt);
         return ans;
     }
     
-    int dfs1(int u, int p)
-    {
+    int dfs(int u, int p)   {
         int cnt = 0;
-        for (int[] nxt : graph.get(u))
-        {
-            int v = nxt[0];
-            int diff = nxt[1];
-            if (p == v)
+        for (int v : graph.getOrDefault(u, new ArrayList<>()))  {
+            if (v == p)
                 continue;
-            cnt += dfs1(v, u) + (diff == -1 ? 1 : 0);
+            if (orderGraph.getOrDefault(u, new HashSet<>()).contains(v))
+                cnt++;
+            cnt += dfs(v, u);
         }
+        
         return cnt;
     }
     
-    void dfs2(int u, int p, int c)
-    {
-        ans[u] = c;
-        for (int[] nxt : graph.get(u))
-        {
-            int v = nxt[0];
-            int diff = nxt[1];
-            if (p == v)
+    void dfs1(int u, int p, int cnt) {
+        ans[u] = n - cnt - 1;
+        for (int v : graph.getOrDefault(u, new ArrayList<>()))  {
+            if (v == p)
                 continue;
-            dfs2(v, u, diff == 1 ? c + 1 : c - 1);
+            int delta = 0;
+            if (orderGraph.getOrDefault(u, new HashSet<>()).contains(v))
+                delta = -1;
+            else
+                delta = 1;
+            dfs1(v, u, cnt + delta);
         }
     }
-    
 }
