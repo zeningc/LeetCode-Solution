@@ -1,16 +1,25 @@
 class Solution {
     public int sumSubarrayMins(int[] arr) {
-        Deque<Integer> stack = new LinkedList<>();
+        Deque<Integer> stk = new LinkedList<>();
         int mod = 1000000007;
-        long ans = 0;
-        for (int i = 0; i <= arr.length; i++)    {
-            while (!stack.isEmpty() && (i == arr.length || arr[stack.peek()] > arr[i]))  {
-                int pop = stack.pop();
-                ans = (ans + (long)arr[pop] * (i - pop) * (pop - (stack.isEmpty() ? -1 : stack.peek()))) % mod;
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++)    {
+            while (!stk.isEmpty() && arr[stk.peek()] >= arr[i]) {
+                int pop = stk.pop();
+                long left = stk.isEmpty() ? -1 : stk.peek();
+                long right = i;
+                ans = (int)((ans + (right - pop) * (pop - left) * arr[pop]) % mod);
             }
-            stack.push(i);
+            stk.push(i);
         }
-        return (int)ans;
+        
+        while (!stk.isEmpty()) {
+            int pop = stk.pop();
+            long left = stk.isEmpty() ? -1 : stk.peek();
+            long right = arr.length;
+            ans = (int)((ans + (right - pop) * (pop - left) * arr[pop]) % mod);
+        }
+        
+        return ans;
     }
 }
-
