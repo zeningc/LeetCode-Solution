@@ -1,68 +1,60 @@
 class Solution {
     public int[] maximizeXor(int[] nums, int[][] queries) {
-        Map<Pair<Integer, Integer>, List<Integer>> queryToIdxMap = new HashMap<>();
-        TrieNode root = new TrieNode(-1);
-        Arrays.sort(nums);
-        int p = 0;
         int n = nums.length;
-        int qLen = queries.length;
-        for (int i = 0; i < qLen; i++) {
-            int x = queries[i][0];
-            int m = queries[i][1];
-            queryToIdxMap.computeIfAbsent(new Pair<Integer, Integer>(x, m),  y -> new LinkedList<>()).add(i);
-        }
-        Arrays.sort(queries, (a, b) -> a[1] - b[1]);
-        int[] ans = new int[qLen];
-        for (int i = 0; i < qLen; i++)  {
-            int x = queries[i][0];
-            int m = queries[i][1];
-            while (p < n && nums[p] <= m)   {
-                TrieNode.insert(root, nums[p]);
-                p++;
+        int m = queries.length;
+        int[] ans = new int[m];
+        Arrays.sort(nums);
+        List<Integer> idx = new ArrayList<>();
+        for (int i = 0; i < m; i++)
+            idx.add(i);
+        Collections.sort(idx, (a, b) -> queries[a][1] - queries[b][1]);
+        Trie root = new Trie('#');
+        int k = 0;
+        for (int i : idx) {
+            while (k < nums.length && nums[k] <= queries[i][1]) {
+                Trie node = root;
+                for (int j = 31; j >= 0; j--)   {
+                    int c = (nums[k] & (1 << j)) == 0 ? 0 : 1;
+                    if (node.children[c] == null)
+                        node.children[c] = new Trie((char)(c + '0'));
+                    node = node.children[c];
+                }
+                node.num = nums[k];
+                k++;
             }
-            int j = TrieNode.search(root, x);
-            int curAns = j == -1 ? -1 : x ^ j;
-            for (int idx : queryToIdxMap.get(new Pair<Integer, Integer>(x, m)))
-                ans[idx] = curAns;
+            int x = queries[i][0];
+            Trie node = root;
+            for (int j = 31; j >= 0; j--)   {
+                if (node == null)
+                    break;
+                int c = (x & (1 << j)) == 0 ? 0 : 1;
+                if (c == 1)   {
+                    if (node.children[0] != null)   {
+                        node = node.children[0];
+                        continue;
+                    }
+                    node = node.children[1];
+                    continue;
+                }
+                if (node.children[1] != null)   {
+                    node = node.children[1];
+                    continue;
+                }
+                node = node.children[0];
+            }
+            ans[i] = node == null ? -1 : node.num ^ x;
         }
         
         return ans;
     }
 }
-
-class TrieNode {
-    int bit;
-    TrieNode[] children;
+class Trie  {
+    Trie[] children;
+    char c;
     int num;
-    
-    public TrieNode(int bit)    {
-        this.bit = bit;
-        children = new TrieNode[2];
-        num = -1;
-    }
-    
-    public static void insert(TrieNode root, int y) {
-        TrieNode node = root;
-        for (int i = 31; i >= 0; i--)    {
-            int bit = (y & (1 << i)) == 0 ? 0 : 1;
-            if (node.children[bit] == null)
-                node.children[bit] = new TrieNode(bit);
-            node = node.children[bit];
-        }
-        node.num = y;
-    }
-    
-    public static int search(TrieNode root, int x) {
-        TrieNode node = root;
-        for (int i = 31; i >= 0; i--)    {
-            int bit = (x & (1 << i)) == 0 ? 0 : 1;
-            if (node.children[1 - bit] != null)
-                node = node.children[1 - bit];
-            else if (node.children[bit] != null)
-                node = node.children[bit];
-            else
-                return -1;
-        }
-        return node.num;
+    public Trie(char c)   {
+        children = new Trie[2];
+        this.c = c;
+        this.num = -1;
     }
 }
