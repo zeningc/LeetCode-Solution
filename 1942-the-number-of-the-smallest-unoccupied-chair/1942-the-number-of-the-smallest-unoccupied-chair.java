@@ -1,33 +1,53 @@
 class Solution {
     public int smallestChair(int[][] times, int targetFriend) {
-        Map<Integer, List<Integer>> leave = new HashMap<>();
-        Map<Integer, Integer> arrive = new HashMap<>();
-        PriorityQueue<Integer> empty = new PriorityQueue<>();
-        TreeSet<Integer> set = new TreeSet<>();
-        int[] seat = new int[times.length];
+        Map<Integer, Integer> arrivalTime = new HashMap<>();
+        Map<Integer, List<Integer>> leaveTime = new HashMap<>();
+        Map<Integer, Integer> assignment = new HashMap<>();
+        TreeMap<Integer, Integer> availableSeats = new TreeMap<>();
+        availableSeats.put(0, Integer.MAX_VALUE);
+        Set<Integer> timeSet = new HashSet<>();
         for (int i = 0; i < times.length; i++)  {
-            leave.computeIfAbsent(times[i][1], x -> new ArrayList<>()).add(i);
-            arrive.put(times[i][0], i);
-            set.add(times[i][0]);
-            set.add(times[i][1]);
+            arrivalTime.put(times[i][0], i);
+            leaveTime.computeIfAbsent(times[i][1], x -> new ArrayList<>()).add(i);
+            timeSet.add(times[i][0]);
+            timeSet.add(times[i][1]);
         }
-        int ans = 0;
-        int cnt = 0;
-        for (int i : set)  {
-            for (int p : leave.getOrDefault(i, new ArrayList<>()))
-                empty.offer(seat[p]);
-            if (arrive.containsKey(i))  {
-                int p = arrive.get(i);
-                if (empty.isEmpty())    {
-                    seat[p] = cnt++;
+        List<Integer> timeList = new ArrayList<>(timeSet);
+        Collections.sort(timeList);
+        for (int time : timeList)   {
+            for (int leaveFriendIdx : leaveTime.getOrDefault(time, new ArrayList<>()))  {
+                int seatToRelease = assignment.get(leaveFriendIdx);
+                int lo = seatToRelease;
+                int hi = seatToRelease;
+                Integer lowerKey = availableSeats.lowerKey(seatToRelease);
+                if (lowerKey != null && seatToRelease - 1 == availableSeats.get(lowerKey))   {
+                    lo = lowerKey;
+                    availableSeats.remove(lowerKey);
                 }
-                else    {
-                    seat[p] = empty.poll();
+                Integer higherKey = availableSeats.higherKey(seatToRelease);
+                if (higherKey != null && seatToRelease + 1 == higherKey)  {
+                    hi = availableSeats.get(higherKey);
+                    availableSeats.remove(higherKey);
                 }
-                if (p == targetFriend)
-                    return seat[p];
+                availableSeats.put(lo, hi);
             }
+            if (!arrivalTime.containsKey(time))
+                continue;
+            int idx = arrivalTime.get(time);
+            Integer from = availableSeats.firstKey();
+            Integer to = availableSeats.get(from);
+            if (idx == targetFriend)
+                return from;
+            assignment.put(idx, from);
+            availableSeats.remove(from);
+            if (from + 1 <= to)
+                availableSeats.put(from + 1, to);
         }
+        
         return -1;
     }
 }
+/*
+treemap[start, end]
+
+*/
