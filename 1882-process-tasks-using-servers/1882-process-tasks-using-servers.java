@@ -13,7 +13,7 @@ class Solution {
             timeSet.add(i);
         int pre = -1;
         int[] ans = new int[m];
-        while (timeSet.higher(pre) != null)   {
+        while (timeSet.higher(pre) != null && (pre < m - 1 || !taskQueue.isEmpty()))   {
             int t = timeSet.higher(pre);
             if (t < m)
                 taskQueue.offer(t);
