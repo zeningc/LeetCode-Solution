@@ -3,8 +3,9 @@ class Solution {
         Map<Integer, Integer> arrivalTime = new HashMap<>();
         Map<Integer, List<Integer>> leaveTime = new HashMap<>();
         Map<Integer, Integer> assignment = new HashMap<>();
-        TreeMap<Integer, Integer> availableSeats = new TreeMap<>();
-        availableSeats.put(0, Integer.MAX_VALUE);
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int i = 0; i < times.length; i++)
+            pq.offer(i);
         Set<Integer> timeSet = new HashSet<>();
         for (int i = 0; i < times.length; i++)  {
             arrivalTime.put(times[i][0], i);
@@ -17,31 +18,15 @@ class Solution {
         for (int time : timeList)   {
             for (int leaveFriendIdx : leaveTime.getOrDefault(time, new ArrayList<>()))  {
                 int seatToRelease = assignment.get(leaveFriendIdx);
-                int lo = seatToRelease;
-                int hi = seatToRelease;
-                Integer lowerKey = availableSeats.lowerKey(seatToRelease);
-                if (lowerKey != null && seatToRelease - 1 == availableSeats.get(lowerKey))   {
-                    lo = lowerKey;
-                    availableSeats.remove(lowerKey);
-                }
-                Integer higherKey = availableSeats.higherKey(seatToRelease);
-                if (higherKey != null && seatToRelease + 1 == higherKey)  {
-                    hi = availableSeats.get(higherKey);
-                    availableSeats.remove(higherKey);
-                }
-                availableSeats.put(lo, hi);
+                pq.offer(seatToRelease);
             }
             if (!arrivalTime.containsKey(time))
                 continue;
             int idx = arrivalTime.get(time);
-            Integer from = availableSeats.firstKey();
-            Integer to = availableSeats.get(from);
+            int seatToAssign = pq.poll();
             if (idx == targetFriend)
-                return from;
-            assignment.put(idx, from);
-            availableSeats.remove(from);
-            if (from + 1 <= to)
-                availableSeats.put(from + 1, to);
+                return seatToAssign;
+            assignment.put(idx, seatToAssign);
         }
         
         return -1;
