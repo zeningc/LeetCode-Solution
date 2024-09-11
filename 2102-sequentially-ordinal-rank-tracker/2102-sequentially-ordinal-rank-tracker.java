@@ -25,7 +25,7 @@ class SORTracker {
     }
     
     public String get() {
-        while (minPQ.size() < queryCnt + 1)
+        if (minPQ.size() < queryCnt + 1)
             minPQ.offer(maxPQ.poll());
         queryCnt++;
         return idToLocation.get(minPQ.peek()[0]);
