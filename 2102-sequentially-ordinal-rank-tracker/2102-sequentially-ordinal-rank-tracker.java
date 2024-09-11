@@ -1,28 +1,34 @@
 class SORTracker {
     PriorityQueue<int[]> minPQ;
     PriorityQueue<int[]> maxPQ;
-    Map<Integer, String> nameMap;
-    int queryCnt;
+    Map<Integer, String> idToLocation;
     int cnt;
+    int queryCnt;
     public SORTracker() {
-        minPQ = new PriorityQueue<>((a, b) -> a[1] != b[1] ? a[1] - b[1] : nameMap.get(b[0]).compareTo(nameMap.get(a[0])));
-        maxPQ = new PriorityQueue<>((a, b) -> a[1] != b[1] ? b[1] - a[1] : nameMap.get(a[0]).compareTo(nameMap.get(b[0])));
-        nameMap = new HashMap<>();
-        queryCnt = 0;
         cnt = 0;
+        queryCnt = 0;
+        idToLocation = new HashMap<>();
+        minPQ = new PriorityQueue<>((a, b) -> b[1] == a[1] ? idToLocation.get(b[0]).compareTo(idToLocation.get(a[0])) : a[1] - b[1]);
+        maxPQ = new PriorityQueue<>((a, b) -> b[1] == a[1] ? idToLocation.get(a[0]).compareTo(idToLocation.get(b[0])) : b[1] - a[1]);
     }
     
     public void add(String name, int score) {
-        int id = cnt++;
-        nameMap.put(id, name);
-        minPQ.offer(new int[] {id, score});
-        maxPQ.offer(minPQ.poll());
+        int locationId = cnt;
+        idToLocation.put(locationId, name);
+        int[] cur = new int[] {locationId, score};
+        if (!minPQ.isEmpty() && (score > minPQ.peek()[1] || score == minPQ.peek()[1] && name.compareTo(idToLocation.get(minPQ.peek()[0])) < 0))   {
+            minPQ.offer(cur);
+            cur = minPQ.poll();
+        }
+        maxPQ.offer(cur);
+        cnt++;
     }
     
     public String get() {
+        while (minPQ.size() < queryCnt + 1)
+            minPQ.offer(maxPQ.poll());
         queryCnt++;
-        minPQ.offer(maxPQ.poll());
-        return nameMap.get(minPQ.peek()[0]);
+        return idToLocation.get(minPQ.peek()[0]);
     }
 }
 
@@ -31,4 +37,5 @@ class SORTracker {
  * SORTracker obj = new SORTracker();
  * obj.add(name,score);
  * String param_2 = obj.get();
+ 
  */
