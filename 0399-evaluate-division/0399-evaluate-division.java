@@ -42,32 +42,29 @@ class UnionFind {
         return weights.get(x) / weights.get(y);
     }
     
-    Pair<String, Double> find(String x)   {
-        if (!parents.get(x).equals(x)) {
-            Pair<String, Double> res = find(parents.get(x));
-            weights.put(x, weights.get(x) * res.getValue());
-            parents.put(x, res.getKey());
+    public String find(String x)  {
+        if (!parents.get(x).equals(x))    {
+            String root = find(parents.get(x));
+            weights.put(x, weights.get(x) * weights.get(parents.get(x)));
+            parents.put(x, root);
+            
         }
-        return new Pair<String, Double>(parents.get(x), weights.get(x));
+        return parents.get(x);
     }
     
     public boolean isConnected(String x, String y)  {
-        return parents.containsKey(x) && parents.containsKey(y) && find(x).getKey().equals(find(y).getKey());
+        return parents.containsKey(x) && parents.containsKey(y) && find(x).equals(find(y));
     }
     
     // x / y = value
     public void union(String x, String y, double value)    {
-        Pair<String, Double> rootXPair = find(x);
-        Pair<String, Double> rootYPair = find(y);
-        String rootX = rootXPair.getKey();
-        String rootY = rootYPair.getKey();
+        String rootX = find(x);
+        String rootY = find(y);
         if (rootX.equals(rootY))
             return;
-        double rootXWeight = rootXPair.getValue();
-        double rootYWeight = rootYPair.getValue();
         
         parents.put(rootX, rootY);
-        weights.put(rootX, value * rootYWeight / rootXWeight);
+        weights.put(rootX, value * weights.get(y) / weights.get(x));
     }
     
 }
