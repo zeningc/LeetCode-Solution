@@ -1,55 +1,45 @@
 class Solution {
     public int magnificentSets(int n, int[][] edges) {
-        Map<Integer, List<Integer>> map = new HashMap<>();
+        Map<Integer, List<Integer>> graph = new HashMap<>();
         for (int[] edge : edges)    {
-            int u = edge[0];
-            int v = edge[1];
-            if (!map.containsKey(u))
-                map.put(u, new LinkedList<>());
-            if (!map.containsKey(v))
-                map.put(v, new LinkedList<>());
-            map.get(u).add(v);
-            map.get(v).add(u);
+            graph.computeIfAbsent(edge[0], x -> new ArrayList<>()).add(edge[1]);
+            graph.computeIfAbsent(edge[1], x -> new ArrayList<>()).add(edge[0]);
         }
-        Map<Integer, Integer> m = new HashMap<>();
-        for (int i = 1; i <= n; i++)    {
-            Set<Integer> prev = new HashSet<>();
-            Set<Integer> visited = new HashSet<>();
-            Deque<Integer> q = new LinkedList<>();
-            q.offer(i);
-            int grpCnt = 0;
+        Map<Integer, Integer> unionCnt = new HashMap<>();
+        for (int i = 1; i <= n; i++) {
+            int[] visited = new int[n + 1];
+            Arrays.fill(visited, -1);
+            Deque<Integer> queue = new LinkedList<>();
+            queue.add(i);
+            int label = 0;
             int grpId = Integer.MAX_VALUE;
-            while (!q.isEmpty())    {
-                grpCnt++;
-                int size = q.size();
-                Set<Integer> cur = new HashSet<>();
+            while (!queue.isEmpty())    {
+                int size = queue.size();
                 while (size-- > 0)  {
-                    int u = q.poll();
+                    int u = queue.poll();
                     grpId = Math.min(grpId, u);
-                    if (visited.contains(u))
+                    if (visited[u] != -1)
                         continue;
-                    visited.add(u);
-                    if (!map.containsKey(u))
-                        continue;
+                    visited[u] = label;
                     
-                    for (int v : map.get(u))    {
-                        if (prev.contains(v))   {
-                            return -1;
-                        }
-                        if (visited.contains(v))
+                    for (int v : graph.getOrDefault(u, new ArrayList<>()))  {
+                        if (visited[v] != -1)   {
+                            if (Math.abs(visited[v] - label) != 1)  {
+                                return -1;
+                            }
                             continue;
-                        q.offer(v);
-                        cur.add(v);
+                        }
+                        queue.offer(v);
                     }
                 }
-                prev = cur;
+                label++;
             }
-            m.put(grpId, Math.max(grpCnt, m.getOrDefault(grpId, 0)));
+            
+            unionCnt.put(grpId, Math.max(unionCnt.getOrDefault(grpId, 0), label));
         }
         int ans = 0;
-        for (int k : m.keySet())
-            ans += m.get(k);
-        
+        for (int value : unionCnt.values())
+            ans += value;
         return ans;
     }
 }
