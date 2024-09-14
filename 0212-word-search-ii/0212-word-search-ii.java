@@ -19,11 +19,7 @@ class Solution {
         
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (root.children[board[i][j] - 'a'] == null)
-                    continue;
-                boolean[][] vis = new boolean[m][n];
-                vis[i][j] = true;
-                dfs(ansSet, board, vis, m, n, i, j, root.children[board[i][j] - 'a']);
+                dfs(ansSet, board, new boolean[m][n], m, n, i, j, root);
             }
         }
         
@@ -31,19 +27,25 @@ class Solution {
     }
     
     void dfs(Set<String> ansSet, char[][] board, boolean[][] vis, int m, int n, int i, int j, Trie node)  {
+        char c = board[i][j];
+        if (node.children[c - 'a'] == null)
+            return;
+        node = node.children[c - 'a'];
         if (node.exist) {
             ansSet.add(node.word);
         }
-        
+        vis[i][j] = true;
         for (int[] d : dir) {
             int ni = i + d[0];
             int nj = j + d[1];
-            if (ni < 0 || ni >= m || nj < 0 || nj >= n || vis[ni][nj] || node.children[board[ni][nj] - 'a'] == null)
+            if (ni < 0 || ni >= m || nj < 0 || nj >= n)
                 continue;
-            vis[ni][nj] = true;
-            dfs(ansSet, board, vis, m, n, ni, nj, node.children[board[ni][nj] - 'a']);
-            vis[ni][nj] = false;
+            if (vis[ni][nj])
+                continue;
+            dfs(ansSet, board, vis, m, n, ni, nj, node);
+           
         }
+        vis[i][j] = false;
     }
 }
 class Trie  {
