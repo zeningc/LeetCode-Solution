@@ -1,109 +1,75 @@
 class Solution {
     public String nearestPalindromic(String n) {
-        long num = Long.valueOf(n);
-        long a = getNextGreaterPolindrome(num);
-        long b = getNextSmallerPolindrome(num);
-        if (Math.abs(a - num) < Math.abs(b - num))
-            return new String(numToCharArr(a));
-        return new String(numToCharArr(b));
-    }
-    
-    long getNextGreaterPolindrome(long num) {
-        char[] ch = numToCharArr(num);
-        char[] flip = flip(ch);
-        if (compare(ch, flip) < 0)
-            return charArrToNum(flip);
-        int c = 1;
-        for (int i = ch.length % 2 == 0 ? (ch.length - 1) / 2 : ch.length / 2; i >= 0; i--)    {
-            int bit = ch[i] - '0' + c;
-            ch[i] = (char)('0' + bit % 10);
-            c = bit / 10;
-        }
-        if (c == 1)
-            return smallestWithNBit(ch.length + 1);
-        return charArrToNum(flip(ch));
-    }
-    
-    long getNextSmallerPolindrome(long num) {
-        if (num == 1)
-            return 0;
-        char[] ch = numToCharArr(num);
-        char[] flip = flip(ch);
-        if (compare(ch, flip) > 0)
-            return charArrToNum(flip);
-        int c = 1;
-        for (int i = ch.length % 2 == 0 ? (ch.length - 1) / 2 : ch.length / 2; i >= 0; i--)    {
-            int bit = ch[i] - '0' - c;
-            ch[i] = (char)('0' + (bit < 0 ? bit + 10 : bit));
-            c = bit < 0 ? 1 : 0;
-        }
-        if (c == 1 || ch[0] == '0')
-            return largestWithNBit(ch.length - 1);
-        return charArrToNum(flip(ch));
-    }
-    
-    char[] numToCharArr(long num)   {
-        if (num == 0)
-            return new char[] {'0'};
-        long t = num;
-        int n = 0;
-        while (t != 0)  {
-            t /= 10;
-            n++;
-        }
-        char[] ch = new char[n];
-        t = num;
-        for (int i = n - 1; i >= 0; i--)    {
-            ch[i] = (char)((int)(t % 10) + '0');
-            t /= 10;
-        }
+        long nNum = Long.valueOf(n);
+        if (nNum < 10)
+            return String.valueOf(nNum - 1);
+        int posToFlip = n.length() % 2 == 0 ? n.length() / 2 - 1 : n.length() / 2;
+        String toFlipStr = n.substring(0, posToFlip + 1);
+        long toFlipNum = Long.valueOf(toFlipStr);
+        String a = getFlipNum(n, toFlipStr, toFlipNum, posToFlip, -1);
+        String b = getFlipNum(n, toFlipStr, toFlipNum, posToFlip, 1);
+        String c = getFlipNum(n, toFlipStr, toFlipNum, posToFlip, 0);
         
-        return ch;
+        return getAns(n, a, getAns(n, b, c));
     }
     
-    char[] flip(char[] ch)   {
-        int i = 0;
-        int j = ch.length - 1;
-        char[] ret = new char[ch.length];
-        ret = ch.clone();
-        while (i <= j)  {
-            ret[j--] = ret[i++];
+    String getFlipNum(String n, String toFlipStr, long toFlipNum, int posToFlip, int delta) {
+        String a = null;
+        if (delta == -1 && isPowerOfTen(toFlipStr))    {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < n.length() - 1; i++)
+                sb.append('9');
+            return sb.toString();
         }
-        return ret;
-    }
-    
-    int compare(char[] a, char[] b) {
-        for (int i = 0; i < a.length; i++)  {
-            if (a[i] == b[i])
-                continue;
-            if (a[i] < b[i])
-                return -1;
-            return 1;
+        if (delta == 1 && isPowerOfTenMinusOne(toFlipStr)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append('1');
+            for (int i = 0; i < n.length() - 1; i++)
+                sb.append('0');
+            sb.append('1');
+            return sb.toString();
         }
-        return 0;
+        toFlipNum += delta;
+        String modifiedToFlipStr = String.valueOf(toFlipNum);
+        return flip(modifiedToFlipStr, n.length() % 2 == 0 ? posToFlip : posToFlip - 1);
     }
     
-    long charArrToNum(char[] ch)    {
-        long num = 0;
-        for (char c : ch)   {
-            num = num * 10 + (c - '0');
-        }
-        
-        return num;
+    boolean isPowerOfTen(String toFlipStr) {
+        if (toFlipStr.charAt(0) != '1')
+            return false;
+        for (int i = 1; i < toFlipStr.length(); i++)
+            if (toFlipStr.charAt(i) != '0')
+                return false;
+        return true;
     }
     
-    long smallestWithNBit(int n)    {
-        long num = 1;
-        for (int i = 0; i < n - 2; i++)
-            num = num * 10;
-        num = num * 10 + 1;
-        return num;
+    boolean isPowerOfTenMinusOne(String toFlipStr)  {
+        for (char c : toFlipStr.toCharArray())
+            if (c != '9')
+                return false;
+        return true;
     }
     
-    long largestWithNBit(int n)    {
-        long num = 9;
-        for (int i = 0; i < n - 1; i++)
-            num = num * 10 + 9;
-        return num;
+    String getAns(String n, String a, String b) {
+        long nNum = Long.valueOf(n);
+        long aNum = Long.valueOf(a);
+        long bNum = Long.valueOf(b);
+        if (nNum == aNum)
+            return b;
+        if (nNum == bNum)
+            return a;
+        if (Math.abs(nNum - aNum) < Math.abs(nNum - bNum))
+            return a;
+        if (Math.abs(nNum - aNum) > Math.abs(nNum - bNum))
+            return b;
+        if (aNum < bNum)
+            return a;
+        return b;
+    }
+    
+    String flip(String numStr, int pos)    {
+        StringBuilder partToReverse = new StringBuilder(numStr.substring(0, pos + 1));
+        partToReverse.reverse();
+        return numStr + partToReverse.toString();
     }
 }
