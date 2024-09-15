@@ -1,13 +1,11 @@
 class Solution {
     public String[] splitMessage(String message, int limit) {
         int splitDigitCnt = -1;
-        int power = 1;
         for (int i = 1; i <= limit - 4; i++)    {
             if (isPossible(message.length(), i, limit)) {
                 splitDigitCnt = i;
                 break;
             }
-            power *= 10;
         }
         
         if (splitDigitCnt == -1)
@@ -27,9 +25,10 @@ class Solution {
             idx = nxtIdx;
             ans.add(messageSegment + suffix);
         }
+        String cntStr = String.valueOf(cnt);
         String[] ansArray = ans.toArray(new String[0]);
         for (int i = 0; i < cnt; i++)
-            ansArray[i] = ansArray[i].replace(placeHolder, String.valueOf(cnt));
+            ansArray[i] = ansArray[i].replace(placeHolder, cntStr);
         
         return ansArray;
     }
