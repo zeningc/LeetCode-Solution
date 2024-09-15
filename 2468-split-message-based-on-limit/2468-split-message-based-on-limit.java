@@ -1,55 +1,50 @@
 class Solution {
     public String[] splitMessage(String message, int limit) {
-        int splitCnt = -1;
-        for (int i = 1; i <= message.length(); i++) {
-            if (isPossibleToSplit(message.length(), limit, i))  {
-                splitCnt = i;
+        int splitDigitCnt = -1;
+        int power = 1;
+        for (int i = 1; i <= limit - 4; i++)    {
+            if (isPossible(message.length(), i, limit)) {
+                splitDigitCnt = i;
                 break;
             }
-        }
-        if (splitCnt == -1)
-            return new String[0];
-        String[] ans = new String[splitCnt];
-        int idx = 0;
-        for (int i = 0; i < splitCnt; i++)  {
-            String suffix = String.format("<%d/%d>", i + 1, splitCnt);
-            int nxtIdx = Math.min(idx + (limit - suffix.length()), message.length());
-            String messageSegment = message.substring(idx, nxtIdx);
-            idx = nxtIdx;
-            ans[i] = messageSegment + suffix;
-        }
-        return ans;
-    }
-    
-    
-    boolean isPossibleToSplit(int totalLength, int limit, int splitCnt) {
-        int fixCnt = getDigitCnt(splitCnt) + 3;
-        int flexCnt = 1;
-        int nxtPow = 10;
-        for (int i = 1; i <= splitCnt && totalLength > 0; i++)  {
-            if (i == nxtPow)    {
-                flexCnt++;
-                nxtPow *= 10;
-            }
-                
-            int consume = limit - fixCnt - flexCnt;
-            if (consume <= 0)
-                return false;
-            totalLength -= Math.min(totalLength, consume);
+            power *= 10;
         }
         
-        return totalLength == 0;
+        if (splitDigitCnt == -1)
+            return new String[0];
+        StringBuilder placeHolderBuilder = new StringBuilder();
+        for (int i = 0; i < splitDigitCnt; i++)
+            placeHolderBuilder.append('#');
+        String placeHolder = placeHolderBuilder.toString();
+        List<String> ans = new ArrayList<>();
+        int idx = 0;
+        int cnt = 0;
+        while (idx < message.length())  {
+            String suffix = String.format("<%d/%s>", cnt + 1, placeHolder);
+            int nxtIdx = Math.min(idx + (limit - suffix.length()), message.length());
+            String messageSegment = message.substring(idx, nxtIdx);
+            cnt++;
+            idx = nxtIdx;
+            ans.add(messageSegment + suffix);
+        }
+        String[] ansArray = ans.toArray(new String[0]);
+        for (int i = 0; i < cnt; i++)
+            ansArray[i] = ansArray[i].replace(placeHolder, String.valueOf(cnt));
+        
+        return ansArray;
     }
     
-    int getDigitCnt(int num)    {
-        if (num == 0)
-            return 1;
+    boolean isPossible(int messageLen, int splitCntLen, int limit)  {
+        int fixedLen = splitCntLen + 3;
         int cnt = 0;
-        while (num != 0)    {
-            num /= 10;
-            cnt++;
+        int power = 1;
+        for (int flexLen = 1; flexLen <= splitCntLen && messageLen > 0; flexLen++)    {
+            int consume = (limit - fixedLen - flexLen) * (power * 10 - 1 - cnt);
+            cnt += (power * 10 - 1 - cnt);
+            messageLen -= Math.min(messageLen, consume);
+            power *= 10;
         }
-        return cnt;
+        
+        return messageLen == 0;
     }
 }
-
