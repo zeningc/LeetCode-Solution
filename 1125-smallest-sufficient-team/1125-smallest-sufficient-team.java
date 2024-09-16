@@ -2,6 +2,7 @@ class Solution {
     public int[] smallestSufficientTeam(String[] req_skills, List<List<String>> people) {
         int skillCnt = 0;
         Map<String, Integer> skillIdMap = new HashMap<>();
+        Map<Long, Integer> cache = new HashMap<>();
         for (String skill : req_skills)
             skillIdMap.put(skill, skillCnt++);
         int requireSkillBit = (1 << skillCnt) - 1;
@@ -18,7 +19,7 @@ class Solution {
         dp[0] = 0;
         for (int i = 0; i < (1 << skillCnt); i++)   {
             for (int j = 0; j < people.size(); j++) {
-                if (cnt(dp[i]) + 1 < cnt(dp[i | peopleSkillBit[j]]))
+                if (cnt(cache, dp[i]) + 1 < cnt(cache, dp[i | peopleSkillBit[j]]))
                     dp[i | peopleSkillBit[j]] = dp[i] | (1L << j);
             }
         }
@@ -34,12 +35,16 @@ class Solution {
         return ans;
     }
     
-    int cnt(long bit)    {
+    int cnt(Map<Long, Integer> cache, long bit)    {
+        if (cache.containsKey(bit))
+            return cache.get(bit);
         int cnt = 0;
+        long key = bit;
         while (bit != 0)    {
             bit &= (bit - 1);
             cnt++;
         }
+        cache.put(key, cnt);
         return cnt;
     }
 }
