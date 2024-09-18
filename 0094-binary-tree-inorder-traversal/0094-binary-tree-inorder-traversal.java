@@ -32,11 +32,8 @@ class Solution {
                 }
                 
                 p2.right = null;
-                ret.add(p1.val);
             }
-            else    {
-                ret.add(p1.val);
-            }
+            ret.add(p1.val);
             p1 = p1.right;
         }
         
