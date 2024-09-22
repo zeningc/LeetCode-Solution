@@ -1,24 +1,24 @@
 class Solution {
     Map<Character, Integer> priority = Map.of(
-        '+', 1,
-        '-', 1,
-        '*', 2,
-        '/', 2
+            '(', 0,
+            ')', 0,
+            '+', 1,
+            '-', 1,
+            '*', 2,
+            '/', 2
     );
     public int calculate(String s) {
         Deque<Character> ops = new LinkedList<>();
         Deque<Integer> nums = new LinkedList<>();
         nums.push(0);
-        
+        s = s.replace(" ", "");
         for (int i = 0; i < s.length(); i++)    {
             char c = s.charAt(i);
-            if (c == ' ')
-                continue;
             if (c == '(')   {
                 ops.push('(');
                 continue;
             }
-            
+
             if (c == ')')   {
                 while (ops.peek() != '(')   {
                     calc(ops, nums);
@@ -26,7 +26,7 @@ class Solution {
                 ops.pop();
                 continue;
             }
-            
+
             if (Character.isDigit(c)) {
                 int j = i;
                 int num = 0;
@@ -38,19 +38,20 @@ class Solution {
                 i = j - 1;
                 continue;
             }
-            
-            while (!ops.isEmpty() && ops.peek() != '(' && ops.peek() != ')' && priority.get(ops.peek()) >= priority.get(c))
+            if (i > 0 && (s.charAt(i - 1) == '(' || s.charAt(i - 1) == '+' || s.charAt(i - 1) == '-' ))
+                nums.push(0);
+            while (!ops.isEmpty() && priority.get(ops.peek()) >= priority.get(c))
                 calc(ops, nums);
             
             ops.push(c);
         }
-        
+
         while (!ops.isEmpty())
             calc(ops, nums);
-        
+
         return nums.pop();
     }
-    
+
     void calc(Deque<Character> ops, Deque<Integer> nums)    {
         int num2= nums.pop();
         int num1 = nums.pop();
