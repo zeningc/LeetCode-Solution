@@ -9,7 +9,7 @@ class Solution {
         Deque<Character> ops = new LinkedList<>();
         Deque<Integer> nums = new LinkedList<>();
         nums.push(0);
-        s.replace(" ", "");
+        s = s.replace(" ", "");
         
         for (int i = 0; i < s.length(); i++)    {
             char c = s.charAt(i);
