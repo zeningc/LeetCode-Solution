@@ -8,6 +8,7 @@ class Solution {
         dp[0] = 0;
         List<Integer> states = new ArrayList<>();
         
+        // Gospers Hack
         int temp = (1 << 2) - 1;
         while (temp < (1 << n))   {
             states.add(temp);
