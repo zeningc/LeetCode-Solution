@@ -1,65 +1,69 @@
 class LRUCache {
+    Map<Integer, Node> keyToNode;
     Node root;
-    Map<Integer, Node> map;
     int capacity;
+    
     public LRUCache(int capacity) {
-        root = new Node(-1, -1);
-        root.next = root;
-        root.prev = root;
-        map = new HashMap<>();
         this.capacity = capacity;
+        keyToNode = new HashMap<>();
+        root = new Node(-1, -1);
+        root.nxt = root;
+        root.pre = root;
     }
     
     public int get(int key) {
-        if (!map.containsKey(key))
+        if (!keyToNode.containsKey(key))
             return -1;
-        Node node = map.get(key);
-        deleteFromList(node);
-        addToHead(node);
-        return node.value;
+        Node node = keyToNode.get(key);
+        moveToHead(node);
+        return node.val;
     }
     
     public void put(int key, int value) {
-        if (map.containsKey(key))   {
-            Node node = map.get(key);
-            node.value = value;
-            deleteFromList(node);
-            addToHead(node);
+        if (!keyToNode.containsKey(key))    {
+            Node node = new Node(key, value);
+            moveToHead(node);
+            keyToNode.put(key, node);
+            capacity--;
+            if (capacity < 0)   {
+                Node nodeToRemove = root.pre;
+                nodeToRemove.pre.nxt = nodeToRemove.nxt;
+                nodeToRemove.nxt.pre = nodeToRemove.pre;
+                keyToNode.remove(nodeToRemove.key);
+            }
+            capacity = Math.max(0, capacity);
             return;
         }
         
-        if (map.size() == capacity) {
-            Node nodeToDelete = root.prev;
-            deleteFromList(nodeToDelete);
-            map.remove(nodeToDelete.key);
-        }
-        Node node = new Node(key, value);
-        map.put(key, node);
-        addToHead(node);
+        Node node = keyToNode.get(key);
+        node.val = value;
+        moveToHead(node);
     }
     
-    private void deleteFromList(Node node)  {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-    }
-    
-    private void addToHead(Node node)   {
-        node.next = root.next;
-        node.prev = root;
-        root.next.prev = node;
-        root.next = node;
+    private void moveToHead(Node node)    {
+        if (node == null)
+            return;
+        if (node.pre != null)
+            node.pre.nxt = node.nxt;
+        if (node.nxt != null)
+            node.nxt.pre = node.pre;
+        
+        node.nxt = root.nxt;
+        node.pre = root;
+        root.nxt.pre = node;
+        root.nxt = node;
     }
 }
 
-class Node  {
-    Node prev;
-    Node next;
+class Node    {
+    Node pre;
+    Node nxt;
+    int val;
     int key;
-    int value;
     
-    public Node(int key, int value) {
+    public Node(int key, int val)    {
         this.key = key;
-        this.value = value;
+        this.val = val;
     }
 }
 
