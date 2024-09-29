@@ -1,14 +1,19 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        List<int[]> intervalList = new ArrayList<>();
         Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        
         int start = -1;
         int end = -1;
-        
+        List<int[]> ans = new ArrayList<>();
         for (int[] interval : intervals)    {
-            if (interval[0] > end)  {
-                if (end != -1)
-                    intervalList.add(new int[] {start, end});
+            if (start == -1)    {
+                start = interval[0];
+                end = interval[1];
+                continue;
+            }
+            
+            if (end < interval[0])  {
+                ans.add(new int[] {start, end});
                 start = interval[0];
                 end = interval[1];
                 continue;
@@ -16,8 +21,13 @@ class Solution {
             
             end = Math.max(end, interval[1]);
         }
-        if (end != -1)
-            intervalList.add(new int[] {start, end});
-        return intervalList.toArray(new int[intervalList.size()][2]);
+        
+        ans.add(new int[] {start, end});
+        
+        int[][] ansArr = new int[ans.size()][2];
+        int idx = 0;
+        for (int[] a : ans)
+            ansArr[idx++] = a;
+        return ansArr;
     }
 }
