@@ -4,33 +4,30 @@ class Solution {
         Map<Integer, Integer> freq = new HashMap<>();
         for (int num : nums)
             freq.put(num, freq.getOrDefault(num, 0) + 1);
-        boolean[] dp = new boolean[(1 << m)];
+        
+        boolean[] dp = new boolean[1 << m];
         dp[0] = true;
-        List<Integer> keys = new ArrayList<>(freq.keySet());
-        Collections.sort(keys);
-        int n = keys.size();
-        for (int i = 0; i < n; i++) {
-            boolean[] nxtDP = dp.clone();
-            int cnt = freq.get(keys.get(i));
-            for (int pre = 0; pre < (1 << m); pre++)  {
-                if (!dp[pre])
+        for (int num : freq.keySet())   {
+            boolean[] newDP = dp.clone();
+            for (int state = 1; state < (1 << m); state++)  {
+                if (dp[state])
                     continue;
-                for (int nxt = 0; nxt < (1 << m); nxt++)    {
-                    if ((nxt & pre) != 0)
+                for (int subset = state; subset != 0; subset = (subset - 1) & state)    {
+                    if (!dp[state - subset])
                         continue;
-                    int curCnt = cnt;
-                    for (int j = 0; j < m; j++) {
-                        if ((nxt & (1 << j)) != 0)
-                            curCnt -= quantity[j];
-                    }
-                    if (curCnt < 0)
-                        continue;
-                    nxtDP[pre | nxt] = true;
+                    int cnt = freq.get(num);
+                    for (int i = 0; i < m; i++)
+                        if ((subset & (1 << i)) != 0)
+                            cnt -= quantity[i];
+                    
+                    if (cnt >= 0)
+                        newDP[state] = true;
                 }
             }
-            dp = nxtDP;
+            dp = newDP;
         }
         
         return dp[(1 << m) - 1];
+        
     }
 }
