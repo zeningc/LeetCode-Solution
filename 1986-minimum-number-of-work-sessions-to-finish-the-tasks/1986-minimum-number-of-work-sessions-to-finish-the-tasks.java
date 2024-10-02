@@ -1,27 +1,27 @@
 class Solution {
     public int minSessions(int[] tasks, int sessionTime) {
         int n = tasks.length;
+        
         int[] dp = new int[1 << n];
+        
         Arrays.fill(dp, Integer.MAX_VALUE / 2);
         dp[0] = 0;
+            
         for (int state = 0; state < (1 << n); state++)  {
             for (int subset = state; subset > 0; subset = (subset - 1) & state) {
-                int ttl = 0;
-                for (int j = 0; j < n; j++) {
-                    if ((subset & (1 << j)) != 0)   {
-                        ttl += tasks[j];
-                    }
+                if (dp[state - subset] >= Integer.MAX_VALUE / 2)
+                    continue;
+                int cnt = 0;
+                for (int i = 0; i < n; i++) {
+                    if ((subset & (1 << i)) != 0)
+                        cnt += tasks[i];
                 }
-                
-                if (ttl <= sessionTime) {
-                    dp[state] = Math.min(dp[state - subset] + 1, dp[state]);
-                }
+                if (cnt > sessionTime)
+                    continue;
+                dp[state] = Math.min(dp[state], dp[state - subset] + 1);
             }
         }
         
         return dp[(1 << n) - 1];
     }
 }
-
-
-// dp[state] = min(dp[state - subset] + 1, dp[state])
