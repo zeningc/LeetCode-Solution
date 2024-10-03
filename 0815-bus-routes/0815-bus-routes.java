@@ -2,45 +2,44 @@ class Solution {
     public int numBusesToDestination(int[][] routes, int source, int target) {
         if (source == target)
             return 0;
-        Map<Integer, Set<Integer>> nodeToLine = new HashMap<>();
-        for (int i = 0; i < routes.length; i++) {
-            for (int j = 0; j < routes[i].length; j++)  {
-                nodeToLine.computeIfAbsent(routes[i][j], x -> new HashSet<>()).add(i);
-            }
+        
+        Map<Integer, List<Integer>> stopToRoutes = new HashMap<>();
+        for (int i = 0; i < routes.length; i++)  {
+            int[] route = routes[i];
+            for (int r : route)
+                stopToRoutes.computeIfAbsent(r, x -> new ArrayList<>()).add(i);
+            
         }
-        
-        
-        
-
+        int dist = 0;
+        Set<Integer> vis = new HashSet<>();
         Deque<Integer> q = new LinkedList<>();
-        q.offer(source);
-        int busCnt = 0;
         Set<Integer> visRoute = new HashSet<>();
-        Set<Integer> visStop = new HashSet<>();
+        q.offer(source);
+        vis.add(source);
+        
         while (!q.isEmpty())    {
             int size = q.size();
             while (size-- > 0)  {
                 int u = q.poll();
-                if (visStop.contains(u))
-                    continue;
-                visStop.add(u);
-                if (target == u)
-                    return busCnt;
-                for (int r : nodeToLine.getOrDefault(u, new HashSet<>()))    {
-                    if (visRoute.contains(r))
+                
+                if (u == target)
+                    return dist;
+                
+                for (int idx : stopToRoutes.getOrDefault(u, new ArrayList<>()))   {
+                    if (visRoute.contains(idx))
                         continue;
-                    visRoute.add(r);
-                    for (int v : routes[r]) {
-                        if (visStop.contains(v))
+                    for (int v : routes[idx]) {
+                        if (vis.contains(v))
                             continue;
+                        vis.add(v);
                         q.offer(v);
                     }
+                    visRoute.add(idx);
                 }
             }
-            busCnt++;
+            dist++;
         }
+        
         return -1;
     }
-    
-    
 }
