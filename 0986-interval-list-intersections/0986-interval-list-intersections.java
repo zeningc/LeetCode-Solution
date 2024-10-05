@@ -1,36 +1,35 @@
 class Solution {
     public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
-        List<int[]> ans = new ArrayList<>();
-        int p = 0;
-        int q = 0;
         int m = firstList.length;
         int n = secondList.length;
+        
+        int p = 0;
+        int q = 0;
+        
+        List<int[]> ansList = new ArrayList<>();
         while (p < m && q < n)  {
-            int firstStart = firstList[p][0];
-            int firstEnd = firstList[p][1];
-            int secondStart = secondList[q][0];
-            int secondEnd = secondList[q][1];
-            
-            if (firstStart > secondEnd) {
-                q++;
+            if (firstList[p][1] < secondList[q][0] || firstList[p][0] > secondList[q][1])   {
+                if (firstList[p][1] > secondList[q][1])
+                    q++;
+                else
+                    p++;
                 continue;
             }
             
-            if (secondStart > firstEnd) {
-                p++;
-                continue;
-            }
             
-            int intersectStart = Math.max(firstStart, secondStart);
-            int intersectEnd = Math.min(firstEnd, secondEnd);
-            ans.add(new int[] {intersectStart, intersectEnd});
-            
-            if (firstEnd > secondEnd)
+            int start = Math.max(firstList[p][0], secondList[q][0]);
+            int end = Math.min(firstList[p][1], secondList[q][1]);
+            ansList.add(new int[] {start, end});
+            if (firstList[p][1] > secondList[q][1])
                 q++;
             else
                 p++;
         }
         
-        return ans.toArray(new int[ans.size()][2]);
+        int[][] ans = new int[ansList.size()][2];
+        for (int i = 0; i < ansList.size(); i++)
+            ans[i] = ansList.get(i);
+        
+        return ans;
     }
 }
