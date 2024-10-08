@@ -1,21 +1,19 @@
 class Solution {
-    public int strStr(String s, String t) {
-        int n = s.length() + t.length() + 1;
-        int[] pi = prefix(t + "#" + s);
-        for (int i = t.length() + 1; i < n; i++)
-            if (pi[i] == t.length())
-                return i - 2 * t.length();
-        
+    public int strStr(String haystack, String needle) {
+        int[] prefix = prefixFunction(needle + "#" + haystack);
+        for (int i = needle.length() + 1; i < haystack.length() + needle.length() + 1; i++)
+            if (prefix[i] == needle.length())
+                return i - needle.length() + 1 - needle.length() - 1;
         return -1;
     }
     
-    int[] prefix(String s)  {
+    int[] prefixFunction(String s)  {
         int[] pi = new int[s.length()];
         for (int i = 1; i < s.length(); i++)    {
             int j = pi[i - 1];
-            while (j > 0 && s.charAt(i) != s.charAt(j))
+            while (j > 0 && s.charAt(j) != s.charAt(i))
                 j = pi[j - 1];
-            if (s.charAt(i) == s.charAt(j))
+            if (s.charAt(j) == s.charAt(i))
                 j++;
             pi[i] = j;
         }
