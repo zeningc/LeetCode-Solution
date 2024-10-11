@@ -1,36 +1,44 @@
 class Solution {
-    int ans;
     public int minTransfers(int[][] transactions) {
-        ans = Integer.MAX_VALUE;
-        int[] account = new int[12];
+        int[] balance = new int[12];
         for (int[] transaction : transactions)  {
-            account[transaction[0]] += transaction[2];
-            account[transaction[1]] -= transaction[2];
+            balance[transaction[0]] += transaction[2];
+            balance[transaction[1]] -= transaction[2];
+        }
+        int[] stateSum = new int[1 << 12];
+        for (int state = 0; state < (1 << 12); state++) {
+            int sum = 0;
+            for (int i = 0; i < 12; i++)    {
+                if ((state & (1 << i)) == 0)
+                    continue;
+                sum += balance[i];
+            }
+            stateSum[state] = sum;
         }
         
-        dfs(0, account, 0);
+        int[] dp = new int[1 << 12];
+        Arrays.fill(dp, Integer.MAX_VALUE / 2);
+        dp[0] = 0;
         
-        return ans;
+        for (int state = 0; state < (1 << 12); state++) {
+            if (stateSum[state] != 0)
+                continue;
+            dp[state] = Math.max(0, countBit(state) - 1);
+            for (int subset = state; subset > 0; subset = (subset - 1) & state) {
+                if (stateSum[subset] == 0)
+                    dp[state] = Math.min(dp[state], dp[state - subset] + dp[subset]);
+            }
+        }
+        
+        return dp[(1 << 12) - 1];
     }
     
-    
-    void dfs(int idx, int[] account, int cnt)   {
-        if (idx >= account.length)  {
-            ans = Math.min(ans, cnt);
-            return;
+    int countBit(int state) {
+        int cnt = 0;
+        while (state != 0)  {
+            cnt++;
+            state &= (state - 1);
         }
-        
-        if (account[idx] == 0)  {
-            dfs(idx + 1, account, cnt);
-            return;
-        }
-        
-        for (int i = idx + 1; i < account.length; i++)  {
-            if (account[i] * account[idx] >= 0)
-                continue;
-            account[i] += account[idx];
-            dfs(idx + 1, account, cnt + 1);
-            account[i] -= account[idx];
-        }
+        return cnt;
     }
 }
