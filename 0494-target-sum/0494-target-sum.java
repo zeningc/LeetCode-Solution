@@ -1,20 +1,21 @@
 class Solution {
     public int findTargetSumWays(int[] nums, int target) {
-        int OFFSET = 1000;
         int n = nums.length;
-        int[][] dp = new int[n][2 * OFFSET + 1];
-        dp[0][nums[0] + OFFSET] += 1;
-        dp[0][-nums[0] + OFFSET] += 1;
+        Map<Integer, Integer> dp = new HashMap<>();
+        dp.put(nums[0], 1);
+        dp.put(-nums[0], dp.getOrDefault(-nums[0], 0) + 1);
         for (int i = 1; i < n; i++) {
-            for (int j = 0; j <= 2 * OFFSET; j++)   {
-                if (j - nums[i] >= 0)
-                    dp[i][j] += dp[i - 1][j - nums[i]];
-                if (j + nums[i] <= 2 * OFFSET)
-                    dp[i][j] += dp[i - 1][j + nums[i]];
+            Map<Integer, Integer> newDP = new HashMap<>();
+            for (Map.Entry<Integer, Integer> entry : dp.entrySet()) {
+                int key = entry.getKey();
+                int val = entry.getValue();
+                newDP.put(key + nums[i], newDP.getOrDefault(key + nums[i], 0) + val);
+                newDP.put(key - nums[i], newDP.getOrDefault(key - nums[i], 0) + val);
             }
+            dp = newDP;
         }
         
-        return dp[n - 1][target + OFFSET];
+        return dp.getOrDefault(target, 0);
     }
 }
 
