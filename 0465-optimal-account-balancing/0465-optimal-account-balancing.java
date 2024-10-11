@@ -1,62 +1,36 @@
 class Solution {
-    int ans = Integer.MAX_VALUE;
+    int ans;
     public int minTransfers(int[][] transactions) {
-        int[] balance = new int[12];
+        ans = Integer.MAX_VALUE;
+        int[] account = new int[12];
         for (int[] transaction : transactions)  {
-            int from = transaction[0];
-            int to = transaction[1];
-            int amount = transaction[2];
-            balance[from] += amount;
-            balance[to] -= amount;
+            account[transaction[0]] += transaction[2];
+            account[transaction[1]] -= transaction[2];
         }
         
-        dfs(balance, 0, 0);
+        dfs(0, account, 0);
+        
         return ans;
     }
     
     
-    void dfs(int[] balance, int start, int cnt)  {
-        if (start >= balance.length)    {
+    void dfs(int idx, int[] account, int cnt)   {
+        if (idx >= account.length)  {
             ans = Math.min(ans, cnt);
             return;
         }
         
-        if (balance[start] == 0)    {
-            dfs(balance, start + 1, cnt);
+        if (account[idx] == 0)  {
+            dfs(idx + 1, account, cnt);
             return;
         }
         
-        for (int i = start + 1; i < balance.length; i++)    {
-            if (balance[i] > 0 && balance[start] < 0 || balance[i] < 0 && balance[start] > 0)   {
-                balance[i] += balance[start];
-                dfs(balance, start + 1, cnt + 1);
-                balance[i] -= balance[start];
-            }
+        for (int i = idx + 1; i < account.length; i++)  {
+            if (account[i] * account[idx] >= 0)
+                continue;
+            account[i] += account[idx];
+            dfs(idx + 1, account, cnt + 1);
+            account[i] -= account[idx];
         }
     }
 }
-
-/*
-
-dp[i][j]
-
-
-[a, b, c]
-[d, e, f]
-=> [1, -2, 1]
-
-
-[5, -10, 5]
-[5, 5, -10]
-
-[negative, positive]
-negative [bit -> state]
-
-0: +10 -1 -5 = 4
-1: -10 + 1 + 5 = -4
-2 -5 + 5 = 0
-
-
-
-
-*/
