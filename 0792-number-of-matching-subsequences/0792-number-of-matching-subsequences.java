@@ -1,27 +1,24 @@
 class Solution {
     public int numMatchingSubseq(String s, String[] words) {
-        int n = s.length();
-        int[][] nxt = new int[26][n];
-        for (int i = n - 1; i >= 0; i--)    {
-            char c = s.charAt(i);
-            for (int j = 0; j < 26; j++)
-                nxt[j][i] = i != n - 1 ? nxt[j][i + 1] : -1;
-            nxt[c - 'a'][i] = i;
+        Map<Character, List<int[]>> map = new HashMap<>();
+        for (int i = 0; i < words.length; i++)   {
+            String word = words[i];
+            map.computeIfAbsent(word.charAt(0), x -> new ArrayList<>()).add(new int[] {i, 0, word.length()});
         }
-        
         int ans = 0;
-        for (String word : words)   {
-            int p = 0;
-            boolean valid = true;
-            for (int q = 0; q < word.length(); q++) {
-                if (p >= n || nxt[word.charAt(q) - 'a'][p] == -1) {
-                    valid = false;
-                    break;
+        for (char c : s.toCharArray())  {
+            if (!map.containsKey(c))
+                continue;
+            List<int[]> list = map.get(c);
+            map.remove(c);
+            for (int[] cur : list)  {
+                cur[1]++;
+                if (cur[1] < cur[2])    {
+                    map.computeIfAbsent(words[cur[0]].charAt(cur[1]), x -> new ArrayList<>()).add(cur);
+                    continue;
                 }
-                p = nxt[word.charAt(q) - 'a'][p] + 1;
-            }
-            if (valid)
                 ans++;
+            }
         }
         
         return ans;
