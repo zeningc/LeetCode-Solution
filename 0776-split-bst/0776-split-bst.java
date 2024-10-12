@@ -15,28 +15,17 @@
  */
 class Solution {
     public TreeNode[] splitBST(TreeNode root, int target) {
-        TreeNode dummySm = new TreeNode(-1);
-        TreeNode dummyLg = new TreeNode(-1);
-        TreeNode sm = dummySm;
-        TreeNode lg = dummyLg;
-        TreeNode node = root;
-        while (node != null)    {
-            TreeNode nxt;
-            if (node.val <= target) {
-                nxt = node.right;
-                sm.right = node;
-                node.right = null;
-                sm = sm.right;
-            }
-            else    {
-                nxt = node.left;
-                lg.left = node;
-                node.left = null;
-                lg = lg.left;
-            }
-            node = nxt;
+        if (root == null)
+            return new TreeNode[2];
+        
+        if (root.val > target)  {
+            TreeNode[] ans = splitBST(root.left, target);
+            root.left = ans[1];
+            return new TreeNode[] {ans[0], root};
         }
         
-        return new TreeNode[] {dummySm.right, dummyLg.left};
+        TreeNode[] ans = splitBST(root.right, target);
+        root.right = ans[0];
+        return new TreeNode[] {root, ans[1]};
     }
 }
