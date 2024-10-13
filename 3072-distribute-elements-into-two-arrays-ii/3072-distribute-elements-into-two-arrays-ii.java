@@ -30,25 +30,13 @@ class Solution {
             
             int cnt1 = rangeQuery(tree1, numToId.get(nums[i]) + 1, cnt - 1);
             int cnt2 = rangeQuery(tree2, numToId.get(nums[i]) + 1, cnt - 1);
-            if (cnt1 > cnt2)    {
+            if (cnt1 > cnt2 || cnt1 == cnt2 && num1.size() < num2.size() || cnt1 == cnt2 && num1.size() == num2.size())    {
                 num1.add(nums[i]);
                 update(tree1, numToId.get(nums[i]), 1);
-            }
-            else if (cnt1 < cnt2)   {
-                num2.add(nums[i]);
-                update(tree2, numToId.get(nums[i]), 1);
-            }
-            else if (num1.size() < num2.size())   {
-                num1.add(nums[i]);
-                update(tree1, numToId.get(nums[i]), 1);
-            }
-            else if (num1.size() > num2.size())   {
-                num2.add(nums[i]);
-                update(tree2, numToId.get(nums[i]), 1);
             }
             else    {
-                num1.add(nums[i]);
-                update(tree1, numToId.get(nums[i]), 1);
+                num2.add(nums[i]);
+                update(tree2, numToId.get(nums[i]), 1);
             }
             
         }
