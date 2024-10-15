@@ -1,69 +1,68 @@
 class LRUCache {
-    Map<Integer, Node> keyToNode;
+    Map<Integer, Node> map;
     Node root;
+    int cnt;
     int capacity;
-    
     public LRUCache(int capacity) {
-        this.capacity = capacity;
-        keyToNode = new HashMap<>();
+        cnt = 0;
         root = new Node(-1, -1);
-        root.nxt = root;
         root.pre = root;
+        root.nxt = root;
+        this.capacity = capacity;
+        map = new HashMap<>();
     }
     
     public int get(int key) {
-        if (!keyToNode.containsKey(key))
+        if (!map.containsKey(key))
             return -1;
-        Node node = keyToNode.get(key);
-        moveToHead(node);
-        return node.val;
+        Node node = map.get(key);
+        removeNode(node);
+        addToFirst(node);
+        return node.value;
     }
     
     public void put(int key, int value) {
-        if (!keyToNode.containsKey(key))    {
-            Node node = new Node(key, value);
-            moveToHead(node);
-            keyToNode.put(key, node);
-            capacity--;
-            if (capacity < 0)   {
+        if (!map.containsKey(key) && cnt == capacity)  {
                 Node nodeToRemove = root.pre;
-                nodeToRemove.pre.nxt = nodeToRemove.nxt;
-                nodeToRemove.nxt.pre = nodeToRemove.pre;
-                keyToNode.remove(nodeToRemove.key);
-            }
-            capacity = Math.max(0, capacity);
-            return;
+                removeNode(nodeToRemove);
+                map.remove(nodeToRemove.key);
+                cnt--;
         }
-        
-        Node node = keyToNode.get(key);
-        node.val = value;
-        moveToHead(node);
+        cnt = map.containsKey(key) ? cnt : cnt + 1;
+        Node nodeToAdd = map.containsKey(key) ? map.get(key) : new Node(key, value);
+        nodeToAdd.value = value;
+        map.put(key, nodeToAdd);
+        removeNode(nodeToAdd);
+        addToFirst(nodeToAdd);
     }
     
-    private void moveToHead(Node node)    {
-        if (node == null)
-            return;
-        if (node.pre != null)
-            node.pre.nxt = node.nxt;
-        if (node.nxt != null)
-            node.nxt.pre = node.pre;
-        
-        node.nxt = root.nxt;
+    void addToFirst(Node node)  {
         node.pre = root;
+        node.nxt = root.nxt;
         root.nxt.pre = node;
         root.nxt = node;
     }
+    
+    Node removeNode(Node node)  {
+        if (node.pre != null && node.nxt != null)   {
+            node.pre.nxt = node.nxt;
+            node.nxt.pre = node.pre;
+        }
+        node.pre = null;
+        node.nxt = null;
+        return node;
+    }
 }
 
-class Node    {
+class Node  {
+    int key;
+    int value;
     Node pre;
     Node nxt;
-    int val;
-    int key;
     
-    public Node(int key, int val)    {
+    public Node(int key, int value) {
         this.key = key;
-        this.val = val;
+        this.value = value;
     }
 }
 
