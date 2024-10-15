@@ -1,19 +1,27 @@
 class Solution {
     public int longestSubarray(int[] nums, int limit) {
-        TreeMap<Integer, Integer> freq = new TreeMap<>();
-        int lo = 0;
+        int n = nums.length;
+        Deque<Integer> maxQ = new LinkedList<>();
+        Deque<Integer> minQ = new LinkedList<>();
+        int l = 0;
         int ans = 0;
-        for (int hi = 0; hi < nums.length; hi++)    {
-            freq.put(nums[hi], freq.getOrDefault(nums[hi], 0) + 1);
+        for (int r = 0; r < n; r++) {
+            while (!maxQ.isEmpty() && nums[maxQ.peekLast()] <= nums[r])
+                maxQ.pollLast();
+            maxQ.offerLast(r);
+            while (!minQ.isEmpty() && nums[minQ.peekLast()] >= nums[r])
+                minQ.pollLast();
+            minQ.offerLast(r);
             
-            while (freq.lastKey() - freq.firstKey() > limit)    {
-                freq.put(nums[lo], freq.getOrDefault(nums[lo], 0) - 1);
-                if (freq.get(nums[lo]) == 0)
-                    freq.remove(nums[lo]);
-                lo++;
+            while (nums[maxQ.peekFirst()] - nums[minQ.peekFirst()] > limit) {
+                while (maxQ.peekFirst() <= l)
+                    maxQ.pollFirst();
+                while (minQ.peekFirst() <= l)
+                    minQ.pollFirst();
+                l++;
             }
             
-            ans = Math.max(ans, hi - lo + 1);
+            ans = Math.max(ans, r - l + 1);
         }
         
         return ans;
