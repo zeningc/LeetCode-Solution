@@ -15,40 +15,34 @@
  */
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
-        int cnt = countNode(root);
-        k = cnt - k + 1;
         TreeNode p1 = root;
+        int cnt = 0;
         while (p1 != null)  {
-            TreeNode p2 = p1.right;
+            TreeNode p2 = p1.left;
             if (p2 != null) {
-                while (p2.left != null && p2.left != p1)
-                    p2 = p2.left;
+                while (p2.right != null && p2.right != p1)
+                    p2 = p2.right;
                 
-                if (p2.left != p1) {
-                    p2.left = p1;
-                    p1 = p1.right;
+                if (p2.right != p1) {
+                    p2.right = p1;
+                    p1 = p1.left;
                     continue;
                 }
                 
-                p2.left = null;
-                k--;
-                if (k == 0)
+                cnt++;
+                if (cnt == k)
                     return p1.val;
-                p1 = p1.left;
+                p2.right = null;
+                p1 = p1.right;
                 continue;
             }
-            k--;
-            if (k == 0)
+            
+            cnt++;
+            if (cnt == k)
                 return p1.val;
-            p1 = p1.left;
+            p1 = p1.right;
         }
         
         return -1;
-    }
-    
-    int countNode(TreeNode node)    {
-        if (node == null)
-            return 0;
-        return countNode(node.left) + countNode(node.right) + 1;
     }
 }
