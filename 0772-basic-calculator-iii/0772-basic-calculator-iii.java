@@ -46,8 +46,8 @@ class Solution {
             
             
             if (c == '-' || c == '+' || c == '*' || c == '/')   {
-                if (idx > 0 && (s.charAt(idx - 1) == '(' || s.charAt(idx - 1) == '+' || s.charAt(idx - 1) == '-'))
-                    numStack.push(0);
+                // if (idx > 0 && (s.charAt(idx - 1) == '(' || s.charAt(idx - 1) == '+' || s.charAt(idx - 1) == '-'))
+                //     numStack.push(0);
                 while (!opStack.isEmpty() && priority.get(c) <= priority.get(opStack.peek()))
                     calc(numStack, opStack);
                 opStack.push(c);
