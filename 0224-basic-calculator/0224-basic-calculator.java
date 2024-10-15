@@ -1,73 +1,74 @@
 class Solution {
     Map<Character, Integer> priority = Map.of(
-            '(', 0,
-            ')', 0,
-            '+', 1,
-            '-', 1,
-            '*', 2,
-            '/', 2
+        '(', 0,
+        ')', 0,
+        '+', 1,
+        '-', 1,
+        '*', 2,
+        '/', 2
     );
     public int calculate(String s) {
-        Deque<Character> ops = new LinkedList<>();
-        Deque<Integer> nums = new LinkedList<>();
-        nums.push(0);
+        Deque<Integer> numStack = new LinkedList<>();
+        Deque<Character> opStack = new LinkedList<>();
+        numStack.push(0);
+        int i = 0;
         s = s.replace(" ", "");
-        for (int i = 0; i < s.length(); i++)    {
+        int n = s.length();
+        while (i < n)   {
             char c = s.charAt(i);
             if (c == '(')   {
-                ops.push('(');
+                opStack.push(c);
+                i++;
                 continue;
             }
-
+            
             if (c == ')')   {
-                while (ops.peek() != '(')   {
-                    calc(ops, nums);
-                }
-                ops.pop();
+                while (opStack.peek() != '(')
+                    calc(opStack, numStack);
+                opStack.pop();
+                i++;
                 continue;
             }
-
-            if (Character.isDigit(c)) {
-                int j = i;
+            
+            if (Character.isDigit(c))   {
                 int num = 0;
-                while (j < s.length() && Character.isDigit(s.charAt(j)))  {
-                    num = num * 10 + s.charAt(j) - '0';
+                int j = i;
+                while (j < n && Character.isDigit(s.charAt(j)))   {
+                    num = num * 10 + (s.charAt(j) - '0');
                     j++;
                 }
-                nums.push(num);
-                i = j - 1;
+                numStack.push(num);
+                i = j;
                 continue;
             }
-            if (i > 0 && (s.charAt(i - 1) == '(' || s.charAt(i - 1) == '+' || s.charAt(i - 1) == '-' ))
-                nums.push(0);
-            while (!ops.isEmpty() && priority.get(ops.peek()) >= priority.get(c))
-                calc(ops, nums);
             
-            ops.push(c);
+            if (i > 0 && (s.charAt(i - 1) == '(' || s.charAt(i - 1) == '+'))
+                numStack.push(0);
+            
+            while (!opStack.isEmpty() && priority.get(opStack.peek()) >= priority.get(c))
+                calc(opStack, numStack);
+            
+            opStack.push(c);
+            i++;
+            continue;
         }
-
-        while (!ops.isEmpty())
-            calc(ops, nums);
-
-        return nums.pop();
+        while (!opStack.isEmpty())
+            calc(opStack, numStack);
+        
+        return numStack.pop();
     }
-
-    void calc(Deque<Character> ops, Deque<Integer> nums)    {
-        int num2= nums.pop();
-        int num1 = nums.pop();
-        char c = ops.pop();
-        if (c == '+')   {
-            nums.push(num1 + num2);
-            return;
-        }
-        if (c == '-')   {
-            nums.push(num1 - num2);
-            return;
-        }
-        if (c == '*')   {
-            nums.push(num1 * num2);
-            return;
-        }
-        nums.push(num1 / num2);
+    
+    void calc(Deque<Character> opStack, Deque<Integer> numStack)    {
+        int b = numStack.pop();
+        int a = numStack.pop();
+        char c = opStack.pop();
+        if (c == '+')
+            numStack.push(a + b);
+        else if (c == '-')
+            numStack.push(a - b);
+        else if (c == '*')
+            numStack.push(a * b);
+        else if (c == '/')
+            numStack.push(a / b);
     }
 }
