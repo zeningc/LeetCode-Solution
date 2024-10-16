@@ -1,56 +1,75 @@
 class Solution {
     public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
-        Map<String, List<Pair<String, Double>>> graph = new HashMap<>();
+        double[] ans = new double[queries.size()];
+        Set<String> source = new HashSet<>();
+        
+        for (List<String> equation : equations)
+            for (String e : equation)
+                source.add(e);
+        
+        UnionFind uf = new UnionFind(source);
+        
         for (int i = 0; i < equations.size(); i++)  {
             List<String> equation = equations.get(i);
-            double ratio = values[i];
-            String a = equation.get(0);
-            String b = equation.get(1);
-            graph.computeIfAbsent(a, x -> new ArrayList<>()).add(new Pair<String, Double>(b, ratio));
-            graph.computeIfAbsent(b, x -> new ArrayList<>()).add(new Pair<String, Double>(a, (double)1.0 / ratio));
+            uf.union(equation.get(0), equation.get(1), values[i]);
         }
         
-        double[] ans = new double[queries.size()];
         for (int i = 0; i < queries.size(); i++)    {
-            List<String> query = queries.get(i);
-            String source = query.get(0);
-            String dest = query.get(1);
-            if (!graph.containsKey(source) || !graph.containsKey(dest)) {
+            String x = queries.get(i).get(0);
+            String y = queries.get(i).get(1);
+            if (!source.contains(x) || !source.contains(y) || !uf.isConnected(x, y)) {
                 ans[i] = -1.0;
                 continue;
             }
-            Set<String> vis = new HashSet<>();
-            Deque<Pair<String, Double>> q = new LinkedList<>();
-            q.offer(new Pair<String, Double>(source, (double)1.0));
-            while (!q.isEmpty())    {
-                Pair<String, Double> cur = q.poll();
-                String u = cur.getKey();
-                
-                if (vis.contains(u))
-                    continue;
-                
-                vis.add(u);
-                double w = cur.getValue();
-                
-                if (u.equals(dest))  {
-                    ans[i] = w;
-                    break;
-                }
-                
-                for (Pair<String, Double> nxt : graph.getOrDefault(u, new ArrayList<>()))   {
-                    String v = nxt.getKey();
-                    if (vis.contains(v))
-                        continue;
-                    
-                    double nxtW = nxt.getValue();
-                    q.offer(new Pair<String, Double>(v, w * nxtW));
-                }
-            }
-            if (!vis.contains(dest))
-                ans[i] = -1.0;
+            
+            ans[i] = uf.query(x, y);
         }
         
-        
         return ans;
+    }
+}
+
+class UnionFind {
+    Map<String, String> parents;
+    Map<String, Double> weights;
+    
+    public UnionFind(Set<String> set)  {
+        parents = new HashMap<>();
+        weights = new HashMap<>();
+        for (String s : set)    {
+            parents.put(s, s);
+            weights.put(s, 1.0);
+        }
+    }
+    
+    private String find(String x)   {
+        if (!parents.get(x).equals(x))    {
+            String directParent = parents.get(x);
+            parents.put(x, find(directParent));
+            weights.put(x, weights.get(x) * weights.get(directParent));
+        }
+        
+        return parents.get(x);
+    }
+    
+    public boolean isConnected(String x, String y)  {
+        return find(x).equals(find(y));
+    }
+    
+    public double query(String x, String y)    {
+        if (!isConnected(x, y))
+            return -1.0;
+        
+        return weights.get(x) / weights.get(y);
+    }
+    
+    public void union(String x, String y, double ratio)    {
+        if (find(x).equals(find(y)))
+            return;
+        String xRoot = find(x);
+        String yRoot = find(y);
+        
+        parents.put(xRoot, yRoot);
+        weights.put(xRoot, ratio * weights.get(y) / weights.get(x));
     }
 }
