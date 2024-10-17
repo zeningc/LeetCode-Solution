@@ -1,82 +1,55 @@
 class Solution {
-    public String nearestPalindromic(String input) {
-        long inputNumber = Long.valueOf(input);
-        if (inputNumber < 10)
-            return String.valueOf(inputNumber - 1);
-        
-        int midIndex = input.length() % 2 == 0 ? input.length() / 2 - 1 : input.length() / 2;
-        String leftHalfStr = input.substring(0, midIndex + 1);
-        long leftHalfNum = Long.valueOf(leftHalfStr);
-        
-        String smallerPalindrome = generatePalindrome(input, leftHalfStr, leftHalfNum, midIndex, -1);
-        String largerPalindrome = generatePalindrome(input, leftHalfStr, leftHalfNum, midIndex, 1);
-        String exactPalindrome = generatePalindrome(input, leftHalfStr, leftHalfNum, midIndex, 0);
-        
-        return findClosestPalindrome(input, smallerPalindrome, findClosestPalindrome(input, largerPalindrome, exactPalindrome));
-    }
-    
-    String generatePalindrome(String input, String leftHalfStr, long leftHalfNum, int midIndex, int adjustment) {
-        if (adjustment == -1 && isPowerOfTen(leftHalfStr)) {
-            StringBuilder ninePalindrome = new StringBuilder();
-            for (int i = 0; i < input.length() - 1; i++)
-                ninePalindrome.append('9');
-            return ninePalindrome.toString();
+    public String nearestPalindromic(String n) {
+        long num = Long.valueOf(n);
+        if (num <= 10)
+            return String.valueOf(num - 1);
+        List<Long> candidate = new ArrayList<>();
+        boolean evenLen = n.length() % 2 == 0;
+        String halfStr = n.substring(0, (n.length() + 1) / 2);
+        long half = Long.valueOf(halfStr);
+        candidate.add(allNine(n.length() - 1));
+        candidate.add(flip(half - 1, evenLen));
+        candidate.add(flip(half, evenLen));
+        candidate.add(flip(half + 1, evenLen));
+        candidate.add(powerOfTenPlusOne(n.length() + 1));
+        long gap = Long.MAX_VALUE;
+        String ans = "";
+        for (long c : candidate)   {
+            if (c == num)
+                continue;
+            if (gap > Math.abs(c - num))    {
+                gap = Math.abs(c - num);
+                ans = String.valueOf(c);
+            }
         }
         
-        if (adjustment == 1 && isPowerOfTenMinusOne(leftHalfStr)) {
-            StringBuilder tenPalindrome = new StringBuilder();
-            tenPalindrome.append('1');
-            for (int i = 0; i < input.length() - 1; i++)
-                tenPalindrome.append('0');
-            tenPalindrome.append('1');
-            return tenPalindrome.toString();
+        return ans;
+    }
+    
+    private long flip(long num, boolean flipLastDigit) {
+        StringBuilder res = new StringBuilder(String.valueOf(num));
+        long t = num;
+        if (!flipLastDigit)
+            t /= 10;
+        while (t != 0) {
+            res.append((char)('0' + t % 10));
+            t /= 10;
         }
-        
-        leftHalfNum += adjustment;
-        String modifiedLeftHalfStr = String.valueOf(leftHalfNum);
-        return createFullPalindrome(modifiedLeftHalfStr, input.length() % 2 == 0 ? midIndex : midIndex - 1);
+        return Long.valueOf(res.toString());
     }
     
-    boolean isPowerOfTen(String leftHalfStr) {
-        if (leftHalfStr.charAt(0) != '1')
-            return false;
-        for (int i = 1; i < leftHalfStr.length(); i++)
-            if (leftHalfStr.charAt(i) != '0')
-                return false;
-        return true;
+    private long allNine(int len)  {
+        long ret = 0;
+        for (int i = 0; i < len; i++)
+            ret = ret * 10 + 9;
+        return ret;
     }
     
-    boolean isPowerOfTenMinusOne(String leftHalfStr) {
-        for (char c : leftHalfStr.toCharArray())
-            if (c != '9')
-                return false;
-        return true;
-    }
-    
-    String findClosestPalindrome(String input, String candidate1, String candidate2) {
-        long inputNumber = Long.valueOf(input);
-        long candidate1Number = Long.valueOf(candidate1);
-        long candidate2Number = Long.valueOf(candidate2);
-        
-        if (inputNumber == candidate1Number)
-            return candidate2;
-        if (inputNumber == candidate2Number)
-            return candidate1;
-        
-        long diff1 = Math.abs(inputNumber - candidate1Number);
-        long diff2 = Math.abs(inputNumber - candidate2Number);
-        
-        if (diff1 < diff2)
-            return candidate1;
-        if (diff2 < diff1)
-            return candidate2;
-        
-        return candidate1Number < candidate2Number ? candidate1 : candidate2;
-    }
-    
-    String createFullPalindrome(String leftHalfStr, int midIndex) {
-        StringBuilder reversedPart = new StringBuilder(leftHalfStr.substring(0, midIndex + 1));
-        reversedPart.reverse();
-        return leftHalfStr + reversedPart.toString();
+    private long powerOfTenPlusOne(int len)   {
+        long ret = 1;
+        for (int i = 0; i < len - 1; i++)
+            ret = ret * 10;
+        ret += 1;
+        return ret;
     }
 }
