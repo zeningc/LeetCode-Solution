@@ -15,7 +15,7 @@
  */
 class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
-        List<Integer> ret = new ArrayList<>();
+        List<Integer> ans = new ArrayList<>();
         TreeNode p1 = root;
         while (p1 != null)  {
             TreeNode p2 = p1.left;
@@ -23,21 +23,21 @@ class Solution {
                 while (p2.right != null && p2.right != p1)
                     p2 = p2.right;
                 
-                if (p2.right != p1) {
-                    ret.add(p1.val);
+                if (p2.right == null)   {
+                    ans.add(p1.val);
                     p2.right = p1;
                     p1 = p1.left;
                     continue;
                 }
                 
                 p2.right = null;
+                p1 = p1.right;
+                continue;
             }
-            else    {
-                ret.add(p1.val);
-            }
+            ans.add(p1.val);
             p1 = p1.right;
         }
         
-        return ret;
+        return ans;
     }
 }
