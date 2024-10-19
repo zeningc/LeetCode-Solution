@@ -1,58 +1,78 @@
 class Solution {
+    Long[] cache;
     public long numberOfPowerfulInt(long start, long finish, int limit, String s) {
+        int[] sArr = numToArr(Long.parseLong(s));
+        
         int[] finishArr = numToArr(finish);
+        cache = new Long[finishArr.length];
+        
+        long b = dfs(sArr, finishArr, 0, limit, false, true);
+        
+        if (start == 1)
+            return b;
+        
         int[] startArr = numToArr(start - 1);
-        long a = dfs(new Long[finishArr.length], s, finishArr, 0, limit, true);
-        long b = dfs(new Long[startArr.length], s, startArr, 0, limit, true);
-        return a - b;
+        cache = new Long[startArr.length];
+        
+        long a = dfs(sArr, startArr, 0, limit, false, true);
+        
+        
+        
+        return b - a;
     }
     
-    long dfs(Long[] mem, String s, int[] nums, int idx, int limit, boolean isLimit) {
-        if (nums.length < s.length())
-            return 0;
-        if (idx >= nums.length - s.length())    {
-            if (!isLimit)
-                return 1;
-            for (int i = nums.length - s.length(), j = 0; i < nums.length; i++, j++)    {
-                if (nums[i] > s.charAt(j) - '0')
-                    return 1;
-                if (nums[i] < s.charAt(j) - '0')
-                    return 0;
-            }
-            return 1;
-        }
-        if (!isLimit && mem[idx] != null)
-            return mem[idx];
-        
-        long ans = 0;
-        
-        int lo = 0;
-        int hi = Math.min(limit, isLimit ? nums[idx] : 9);
-        
-        for (int i = lo; i <= hi; i++)  {
-            ans += dfs(mem, s, nums, idx + 1, limit, isLimit && nums[idx] == i);
-        }
-        if (!isLimit)
-            mem[idx] = ans;
-        return ans;
-    }
-    
-    int[] numToArr(long x)  {
-        if (x == 0)
-            return new int[] {0};
+    int[] numToArr(long num)    {
         int cnt = 0;
-        long t = x;
-        while (t != 0)  {
-            t /= 10;
+        long t = num;
+        while (t != 0)    {
             cnt++;
+            t /= 10;
         }
-        t = x;
+        
         int[] arr = new int[cnt];
         for (int i = cnt - 1; i >= 0; i--)  {
-            arr[i] = (int)(t % 10);
-            t /= 10;
+            arr[i] = (int)(num % 10);
+            num /= 10;
         }
         
         return arr;
+    }
+    long dfs(int[] suffix, int[] num, int idx, int limit, boolean isNum, boolean isLimit) {
+        if (suffix.length > num.length)
+            return 0;
+        if (idx + suffix.length >= num.length)    {
+            if (!isNum || isNum && isLimit) {
+                if (!isNum && idx != 0)
+                    return 1;
+                for (int j = idx; j < num.length; j++)
+                    if (suffix[j - idx] < num[j])
+                        return 1;
+                    else if (suffix[j - idx] > num[j])
+                        return 0;
+                return 1;
+            }
+            
+            return 1;
+        }
+        
+        if (isNum && !isLimit && cache[idx] != null)
+            return cache[idx];
+        
+        long ans = 0;
+        if (!isNum) {
+            ans += dfs(suffix, num, idx + 1, limit, false, false);
+        }
+        
+        int lo = isNum ? 0 : 1;
+        int hi = Math.min(limit, isLimit ? num[idx] : limit);
+        
+        for (int d = lo; d <= hi; d++)  {
+            ans += dfs(suffix, num, idx + 1, limit, true, isLimit && num[idx] == d);
+        }
+        
+        if (isNum && !isLimit)
+            cache[idx] = ans;
+        
+        return ans;
     }
 }
