@@ -9,6 +9,7 @@ class Solution {
             graph.computeIfAbsent(v, x -> new ArrayList<>()).add(new int[] {u, d});
         }
         
+        int ans = 0;
         int[] vis = new int[n];
         Arrays.fill(vis, -1);
         PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[1] - b[1]);
@@ -20,7 +21,7 @@ class Solution {
             if (vis[u] != -1)
                 continue;
             vis[u] = d;
-            
+            ans++;
             if (!graph.containsKey(u))
                 continue;
             
@@ -28,28 +29,27 @@ class Solution {
                 int v = nxt[0];
                 int nd = nxt[1];
                 
-                if (vis[v] != -1)
+                if (vis[v] != -1 || d + nd + 1 > maxMoves)
                     continue;
                 
                 pq.offer(new int[] {v, d + nd + 1});
             }
         }
         
-        int ans = 0;
         for (int i = 0; i < edges.length; i++)  {
             int u = edges[i][0];
             int v = edges[i][1];
             int d = edges[i][2];
-            if ((vis[u] == -1 || vis[u] > maxMoves) && (vis[v] == -1 || vis[v] > maxMoves))
+            if (vis[u] == -1 && vis[v] == -1)
                 continue;
             
-            if (vis[u] == -1 || vis[u] > maxMoves)   {
+            if (vis[u] == -1)   {
                 ans += Math.min(maxMoves - vis[v], d);
                 continue;
             }
             
             
-            if (vis[v] == -1 || vis[v] > maxMoves)   {
+            if (vis[v] == -1)   {
                 ans += Math.min(maxMoves - vis[u], d);
                 continue;
             }
@@ -57,10 +57,6 @@ class Solution {
             
             ans += Math.min(maxMoves - vis[u] + maxMoves - vis[v], d);
         }
-        
-        for (int i = 0; i < n; i++)
-            if (vis[i] >= 0 && vis[i] <= maxMoves)
-                ans++;
         
         return ans;
     }
