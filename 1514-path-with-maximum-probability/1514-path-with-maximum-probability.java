@@ -1,41 +1,33 @@
 class Solution {
-    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
-        Map<Integer, List<double[]>> graph = new HashMap<>();
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        Map<Integer, List<int[]>> graph = new HashMap<>();
         for (int i = 0; i < edges.length; i++)    {
             int[] edge = edges[i];
-            int u = edge[0];
-            int v = edge[1];
-            double p = succProb[i];
-            if (!graph.containsKey(u))
-                graph.put(u, new LinkedList<>());
-            if (!graph.containsKey(v))
-                graph.put(v, new LinkedList<>());
-            graph.get(u).add(new double[] {v * 1.0, p});
-            graph.get(v).add(new double[] {u * 1.0, p});
+            graph.computeIfAbsent(edge[0], x -> new ArrayList<>()).add(new int[] {edge[1], i});
+            graph.computeIfAbsent(edge[1], x -> new ArrayList<>()).add(new int[] {edge[0], i});
         }
+        
+        PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> a[1] == b[1] ? 0 : a[1] > b[1] ? -1 : 1);
+        pq.offer(new double[] {start_node, 1.0});
         boolean[] vis = new boolean[n];
-        Queue<double[]> pq = new PriorityQueue<>((a, b) -> a[0] == b[0] ? 0 : a[0] < b[0] ? 1 : -1);
-        pq.offer(new double[] {1.0, start});
         while (!pq.isEmpty())   {
-            double[] curr = pq.poll();
-            int u = (int)curr[1];
-            double p = curr[0];
+            double[] cur = pq.poll();
+            int u = (int)cur[0];
+            double p = cur[1];
             if (vis[u])
                 continue;
             vis[u] = true;
-            if (u == end)
+            if (u == end_node)
                 return p;
-            if (!graph.containsKey(u))
-                continue;
-            for (double[] dest : graph.get(u))  {
-                int v = (int)dest[0];
-                double nextP = dest[1];
+            
+            for (int[] nxt : graph.getOrDefault(u, new ArrayList<>()))  {
+                int v = nxt[0];
+                double np = succProb[nxt[1]];
                 if (vis[v])
                     continue;
-                pq.offer(new double[] {p * nextP, v * 1.0});
+                pq.offer(new double[] {v, p * np});
             }
         }
-        
-        return (double)0;
+        return 0;
     }
 }
