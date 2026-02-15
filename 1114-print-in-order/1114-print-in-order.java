@@ -1,42 +1,29 @@
 class Foo {
-    private int cnt;
+    Semaphore first = new Semaphore(1);
+    Semaphore second = new Semaphore(0);
+    Semaphore third = new Semaphore(0);
     public Foo() {
-        cnt = 0;
+        
     }
 
     public void first(Runnable printFirst) throws InterruptedException {
-        synchronized(this)  {
-            while (cnt != 0)
-                wait();
-            cnt = 1;
-            // printFirst.run() outputs "first". Do not change or remove this line.
-            printFirst.run();
-            notifyAll();
-        }
-        
+        first.acquire();
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        second.release();
     }
 
     public void second(Runnable printSecond) throws InterruptedException {
-        synchronized(this)  {
-            while (cnt != 1)
-                wait();
-            cnt = 2;
-            // printSecond.run() outputs "second". Do not change or remove this line.
-            printSecond.run();
-            notifyAll();
-        }
-        
+        second.acquire();
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        third.release();
     }
 
     public void third(Runnable printThird) throws InterruptedException {
-        synchronized(this)  {
-            while (cnt != 2)
-                wait();
-            cnt = 3;
-            // printThird.run() outputs "third". Do not change or remove this line.
-            printThird.run();
-            notifyAll();
-        }
+        third.acquire();
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
         
     }
 }
