@@ -30,10 +30,7 @@ class Solution {
     public int depthSum(List<NestedInteger> nestedList) {
         int ans = 0;
         for (NestedInteger nxt : nestedList)    {
-            if (nxt.isInteger())
-                ans += nxt.getInteger();
-            else
-                ans += dfs(nxt, 1);
+            ans += dfs(nxt, 1);
         }
         return ans;
     }
