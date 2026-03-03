@@ -12,21 +12,21 @@ class Solution {
         int[][] dir = new int[][] {{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
         Deque<int[]> sQ = new LinkedList<>();
         Deque<int[]> eQ = new LinkedList<>();
-        Set<Pair<Integer, Integer>> sVis = new HashSet<>();
-        Set<Pair<Integer, Integer>> eVis = new HashSet<>();
+        Set<Long> sVis = new HashSet<>();
+        Set<Long> eVis = new HashSet<>();
         int minX = -2;
         int minY = -2;
         int maxX = x + 2;
         int maxY = y + 2;
         sQ.offer(new int[] {0, 0});
         eQ.offer(new int[] {x, y});
-        sVis.add(new Pair<>(0, 0));
-        eVis.add(new Pair<>(x, y));
+        sVis.add(getKey(0, 0));
+        eVis.add(getKey(x, y));
         int step = 1;
         while (!sQ.isEmpty() && !eQ.isEmpty())  {
             Deque<int[]> tQ = eQ;
-            Set<Pair<Integer, Integer>> vis = eVis;
-            Set<Pair<Integer, Integer>> vis2 = sVis;
+            Set<Long> vis = eVis;
+            Set<Long> vis2 = sVis;
             if (sQ.size() < eQ.size())  {
                 tQ = sQ;
                 vis = sVis;
@@ -42,11 +42,11 @@ class Solution {
                 for (int[] d : dir) {
                     int nx = cx + d[0];
                     int ny = cy + d[1];
-                    Pair<Integer, Integer> np = new Pair<>(nx, ny);
-                    if (nx < minX || nx > maxX || ny < minY || ny > maxY || vis.contains(np))
+                    long nk = getKey(nx, ny);
+                    if (nx < minX || nx > maxX || ny < minY || ny > maxY || vis.contains(nk))
                         continue;
-                    vis.add(np);
-                    if (vis2.contains(np))
+                    vis.add(nk);
+                    if (vis2.contains(nk))
                         return step;
                     tQ.offer(new int[] {nx, ny});
                 }
@@ -56,5 +56,9 @@ class Solution {
         }
 
         return -1;
+    }
+
+    long getKey(long x, long y) {
+        return (x << 32) + (y & 0xffffffffL);
     }
 }
