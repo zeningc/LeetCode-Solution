@@ -131,6 +131,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+| [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Divide and Conquer
 | Problem Name | Difficulty |
 | ------- | ------- |
@@ -139,6 +140,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+| [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Heap (Priority Queue)
 | Problem Name | Difficulty |
 | ------- | ------- |
@@ -151,6 +153,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+| [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Linked List
 | Problem Name | Difficulty |
 | ------- | ------- |
@@ -159,4 +162,8 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+## Greedy
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 <!---LeetCode Topics End-->
