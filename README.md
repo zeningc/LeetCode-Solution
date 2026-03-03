@@ -127,6 +127,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0339-nested-list-weight-sum](https://github.com/zeningc/LeetCode-Solution/tree/main/0339-nested-list-weight-sum/) | Medium |
+| [1197-minimum-knight-moves](https://github.com/zeningc/LeetCode-Solution/tree/main/1197-minimum-knight-moves/) | Medium |
 ## Array
 | Problem Name | Difficulty |
 | ------- | ------- |
