@@ -147,4 +147,16 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+## Hash Table
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+## Linked List
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+## Two Pointers
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
 <!---LeetCode Topics End-->
