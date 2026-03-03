@@ -132,6 +132,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
+| [0162-find-peak-element](https://github.com/zeningc/LeetCode-Solution/tree/main/0162-find-peak-element/) | Medium |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Divide and Conquer
@@ -177,4 +178,8 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
+## Binary Search
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0162-find-peak-element](https://github.com/zeningc/LeetCode-Solution/tree/main/0162-find-peak-element/) | Medium |
 <!---LeetCode Topics End-->
