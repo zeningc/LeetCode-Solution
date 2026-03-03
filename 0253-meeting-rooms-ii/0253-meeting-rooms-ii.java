@@ -1,26 +1,16 @@
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
         int ans = 0;
-        int n = intervals.length;
-        int[] startTime = new int[n];
-        int[] endTime = new int[n];
-    
-        for (int i = 0; i < n; i++) {
-            startTime[i] = intervals[i][0];
-            endTime[i] = intervals[i][1];
+        for (int[] interval : intervals)  {
+            if (!pq.isEmpty() && pq.peek()[1] <= interval[0])
+                pq.poll();
+            
+            pq.offer(interval);
+            ans = Math.max(ans, pq.size());
         }
-        
-        Arrays.sort(startTime);
-        Arrays.sort(endTime);
-        
-        int end = 0;
-        for (int start = 0; start < n; start++) {
-            if (startTime[start] < endTime[end])
-                ans++;
-            else
-                end++;
-        }
-        
+
         return ans;
     }
 }
