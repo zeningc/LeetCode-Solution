@@ -21,7 +21,7 @@ class Solution {
         int m = grid.length;
         int n = grid[0].length;
         q.offer(new int[] {sx, sy});
-        int step = 0;
+        int step = 1;
         int ans = Integer.MAX_VALUE;
         while (!q.isEmpty())    {
             int size = q.size();
@@ -29,15 +29,14 @@ class Solution {
                 int[] cur = q.poll();
                 int x = cur[0];
                 int y = cur[1];
-                dist[x][y] += step;
-                if (x != sx || y != sy)
-                    ans = Math.min(ans, dist[x][y]);
                 for (int[] d : dir) {
                     int nx = x + d[0];
                     int ny = y + d[1];
                     if (nx < 0 || nx >= m || ny < 0 || ny >= n || grid[nx][ny] != empty)
                         continue;
                     grid[nx][ny] = empty - 1;
+                    dist[nx][ny] += step;
+                    ans = Math.min(ans, dist[nx][ny]);
                     q.offer(new int[] {nx, ny});
                 }
             }
