@@ -1,7 +1,7 @@
 class Solution {
     public int maxPoints(int[][] points) {
         int n = points.length;
-        int ans = 1;
+        int ans = 0;
         for (int i = 0; i < n; i++) {
             int x1 = points[i][0];
             int y1 = points[i][1];
@@ -37,6 +37,7 @@ class Solution {
                 cnt.put(key, cnt.getOrDefault(key, 0) + 1);
                 ans = Math.max(ans, cnt.get(key) + same + 1);
             }
+            ans = Math.max(ans, same + 1);
         }
 
         return ans;
