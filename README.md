@@ -134,6 +134,7 @@ My own implementation for leetcode questions in Java.
 | [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
 | [0162-find-peak-element](https://github.com/zeningc/LeetCode-Solution/tree/main/0162-find-peak-element/) | Medium |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Divide and Conquer
 | Problem Name | Difficulty |
@@ -143,11 +144,13 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Heap (Priority Queue)
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 ## Quickselect
 | Problem Name | Difficulty |
 | ------- | ------- |
@@ -166,9 +169,11 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 ## Greedy
 | Problem Name | Difficulty |
 | ------- | ------- |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Math
 | Problem Name | Difficulty |
@@ -182,4 +187,8 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0162-find-peak-element](https://github.com/zeningc/LeetCode-Solution/tree/main/0162-find-peak-element/) | Medium |
+## Prefix Sum
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 <!---LeetCode Topics End-->
