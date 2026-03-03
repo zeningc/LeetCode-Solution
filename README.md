@@ -130,6 +130,7 @@ My own implementation for leetcode questions in Java.
 ## Array
 | Problem Name | Difficulty |
 | ------- | ------- |
+| [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Divide and Conquer
@@ -153,6 +154,7 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0142-linked-list-cycle-ii/) | Medium |
+| [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
 ## Linked List
 | Problem Name | Difficulty |
@@ -166,4 +168,12 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
+## Math
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
+## Geometry
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [0149-max-points-on-a-line](https://github.com/zeningc/LeetCode-Solution/tree/main/0149-max-points-on-a-line/) | Hard |
 <!---LeetCode Topics End-->
