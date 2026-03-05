@@ -136,6 +136,7 @@ My own implementation for leetcode questions in Java.
 | [0215-kth-largest-element-in-an-array](https://github.com/zeningc/LeetCode-Solution/tree/main/0215-kth-largest-element-in-an-array/) | Medium |
 | [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
 | [1296-divide-array-in-sets-of-k-consecutive-numbers](https://github.com/zeningc/LeetCode-Solution/tree/main/1296-divide-array-in-sets-of-k-consecutive-numbers/) | Medium |
+| [3835-count-subarrays-with-cost-less-than-or-equal-to-k](https://github.com/zeningc/LeetCode-Solution/tree/main/3835-count-subarrays-with-cost-less-than-or-equal-to-k/) | Medium |
 ## Divide and Conquer
 | Problem Name | Difficulty |
 | ------- | ------- |
@@ -191,4 +192,12 @@ My own implementation for leetcode questions in Java.
 | Problem Name | Difficulty |
 | ------- | ------- |
 | [0253-meeting-rooms-ii](https://github.com/zeningc/LeetCode-Solution/tree/main/0253-meeting-rooms-ii/) | Medium |
+## Queue
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [3835-count-subarrays-with-cost-less-than-or-equal-to-k](https://github.com/zeningc/LeetCode-Solution/tree/main/3835-count-subarrays-with-cost-less-than-or-equal-to-k/) | Medium |
+## Monotonic Queue
+| Problem Name | Difficulty |
+| ------- | ------- |
+| [3835-count-subarrays-with-cost-less-than-or-equal-to-k](https://github.com/zeningc/LeetCode-Solution/tree/main/3835-count-subarrays-with-cost-less-than-or-equal-to-k/) | Medium |
 <!---LeetCode Topics End-->
